@@ -8,20 +8,26 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Ticket extends BaseEntity {
+public class GymTicketCustomer extends BaseEntity{
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "TICKET_ID", columnDefinition = "BINARY(16)")
+    @Column(name = "GYM_TICKET_ID", columnDefinition = "BINARY(16)")
     private UUID id;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @ToString.Exclude
-    @JoinColumn(name = "CENTER_END_USER_ID")
-    private CenterEndUser centerEndUser;
+    @JoinColumn(name = "GYM_TICKET_ID")
+    private GymTicket gymTicket;
+    private Long customerId;
+    private LocalDate startDate;
+    private LocalDate endDate;
+
 }

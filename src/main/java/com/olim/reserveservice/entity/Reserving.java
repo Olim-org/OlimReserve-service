@@ -16,25 +16,15 @@ import java.util.UUID;
 @Getter
 public class Reserving extends BaseEntity {
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "RESERVING_ID", columnDefinition = "BINARY(16)")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @ToString.Exclude
     @JoinColumn(name = "RESERVATION_ID")
     private Reservation reservation;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    @ToString.Exclude
-    @JoinColumn(name = "CENTER_END_USER_ID")
-    private CenterEndUser centerEndUser;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    @ToString.Exclude
-    @JoinColumn(name = "CENTER_ID")
-    private Center center;
+    private Long customerId;
+
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 }
