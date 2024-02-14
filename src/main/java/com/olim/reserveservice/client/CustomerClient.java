@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface CustomerClient {
     String AUTHORIZATION = "Authorization";
     @GetMapping("/center/info")
-    CenterFeignResponse getCenterInfo(@RequestHeader(AUTHORIZATION) String token, @RequestParam(value = "centerId") String centerId);
+    CenterFeignResponse getCenterInfo(@RequestHeader("id") String userId, @RequestParam(value = "centerId") String centerId);
 }
