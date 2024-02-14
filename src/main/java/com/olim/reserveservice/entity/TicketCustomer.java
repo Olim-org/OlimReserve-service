@@ -12,6 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Entity
@@ -32,8 +33,8 @@ public class TicketCustomer extends BaseEntity{
     private Long customerId;
     private LocalDate startDate;
     private LocalDate endDate;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private Integer validDays;
     private Integer validCounts;
     private TicketCustomerType type;

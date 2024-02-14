@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -32,8 +33,8 @@ public class Ticket extends BaseEntity {
     private TicketType type;
     private Integer applyDays;  // 사용 가능 일 수
     private Integer validCounts; // 사용 가능 횟 수
-    private LocalDateTime startTime; // 사용 가능 시간
-    private LocalDateTime endTime;  // 사용 가능 시간
+    private LocalTime startTime; // 사용 가능 시간
+    private LocalTime endTime;  // 사용 가능 시간
     @Enumerated(value = EnumType.STRING)
     private TicketStatus status;
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
@@ -47,8 +48,8 @@ public class Ticket extends BaseEntity {
             String sale,
             Integer applyDays,
             Integer validCounts,
-            LocalDateTime startTime,
-            LocalDateTime endTime,
+            LocalTime startTime,
+            LocalTime endTime,
             TicketType type
     ) {
         this.centerId = centerId;
@@ -71,8 +72,8 @@ public class Ticket extends BaseEntity {
             String sale,
             Integer applyDays,
             Integer validCounts,
-            LocalDateTime startTime,
-            LocalDateTime endTime,
+            LocalTime startTime,
+            LocalTime endTime,
             TicketStatus ticketStatus
     ) {
         this.title = title;

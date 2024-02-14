@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -53,8 +54,8 @@ public class TicketServiceImpl implements TicketService {
                         .type(TicketType.GYM)
                         .applyDays(ticketCreateRequest.applyDays())
                         .validCounts(null)
-                        .startTime(LocalDateTime.parse(ticketCreateRequest.startTime(), DateTimeFormatter.ISO_TIME))
-                        .endTime(LocalDateTime.parse(ticketCreateRequest.endTime(), DateTimeFormatter.ISO_TIME))
+                        .startTime(LocalTime.parse(ticketCreateRequest.startTime()))
+                        .endTime(LocalTime.parse(ticketCreateRequest.endTime(), DateTimeFormatter.ISO_TIME))
                         .build();
                 this.ticketRepository.save(ticket);
                 break;
@@ -69,8 +70,8 @@ public class TicketServiceImpl implements TicketService {
                         .type(TicketType.PT)
                         .applyDays(ticketCreateRequest.applyDays())
                         .validCounts(ticketCreateRequest.validCount())
-                        .startTime(LocalDateTime.parse(ticketCreateRequest.startTime(), DateTimeFormatter.ISO_TIME))
-                        .endTime(LocalDateTime.parse(ticketCreateRequest.endTime(), DateTimeFormatter.ISO_TIME))
+                        .startTime(LocalTime.parse(ticketCreateRequest.startTime(), DateTimeFormatter.ISO_TIME))
+                        .endTime(LocalTime.parse(ticketCreateRequest.endTime(), DateTimeFormatter.ISO_TIME))
                         .build();
                 this.ticketRepository.save(ticket);
             }
@@ -121,8 +122,8 @@ public class TicketServiceImpl implements TicketService {
                         ticketModifyRequest.sale(),
                         ticketModifyRequest.applyDays(),
                         null,
-                        LocalDateTime.parse(ticketModifyRequest.startTime(), DateTimeFormatter.ISO_TIME),
-                        LocalDateTime.parse(ticketModifyRequest.endTime(), DateTimeFormatter.ISO_TIME),
+                        LocalTime.parse(ticketModifyRequest.startTime(), DateTimeFormatter.ISO_TIME),
+                        LocalTime.parse(ticketModifyRequest.endTime(), DateTimeFormatter.ISO_TIME),
                         ticketModifyRequest.ticketStatus()
                 );
                 ticketRepository.save(gotTicket);
@@ -136,8 +137,8 @@ public class TicketServiceImpl implements TicketService {
                         ticketModifyRequest.sale(),
                         ticketModifyRequest.applyDays(),
                         ticketModifyRequest.validCount(),
-                        LocalDateTime.parse(ticketModifyRequest.startTime(), DateTimeFormatter.ISO_TIME),
-                        LocalDateTime.parse(ticketModifyRequest.endTime(), DateTimeFormatter.ISO_TIME),
+                        LocalTime.parse(ticketModifyRequest.startTime(), DateTimeFormatter.ISO_TIME),
+                        LocalTime.parse(ticketModifyRequest.endTime(), DateTimeFormatter.ISO_TIME),
                         ticketModifyRequest.ticketStatus()
                 );
                 ticketRepository.save(gotTicket);
