@@ -1,5 +1,6 @@
 package com.olim.reserveservice.entity;
 
+import com.olim.reserveservice.enumeration.TicketStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -29,6 +30,8 @@ public class GymTicket extends BaseEntity {
     private Integer applyDays;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    @Enumerated(value = EnumType.STRING)
+    private TicketStatus status;
     @OneToMany(mappedBy = "gymTicket", cascade = CascadeType.ALL)
     private List<GymTicketCustomer> gymTicketCustomers;
     @Builder
@@ -47,9 +50,30 @@ public class GymTicket extends BaseEntity {
         this.description = description;
         this.price = price;
         this.sale = sale;
+        this.status = TicketStatus.WAIT;
         this.applyDays = applyDays;
         this.startTime = startTime;
         this.endTime = endTime;
         this.gymTicketCustomers = new ArrayList<>();
     }
+    public void updateTicket(
+            String title,
+            String description,
+            String price,
+            String sale,
+            Integer applyDays,
+            LocalDateTime startTime,
+            LocalDateTime endTime,
+            TicketStatus ticketStatus
+    ) {
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.sale = sale;
+        this.status = ticketStatus;
+        this.applyDays = applyDays;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.olim.reserveservice.service;
 
 import com.olim.reserveservice.dto.request.GymTicketCreateRequest;
+import com.olim.reserveservice.dto.request.GymTicketModifyRequest;
 import com.olim.reserveservice.dto.response.GymTicketGetListResonse;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,4 +12,6 @@ public interface GymTicketService {
     String createGymTicket(UUID userId, GymTicketCreateRequest gymTicketCreateRequest);
     @Transactional
     GymTicketGetListResonse getTicketList(UUID userId, UUID centerId);
+    @Transactional
+    String updateTicket(UUID userId, UUID ticketId, GymTicketModifyRequest gymTicketModifyRequest);
 }
