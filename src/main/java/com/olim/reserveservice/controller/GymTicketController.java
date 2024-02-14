@@ -53,7 +53,7 @@ public class GymTicketController {
     @Operation(description = "헬스장 이용권 수정")
     @Parameters({
             @Parameter(name = "userId", description = "액세스 토큰 아이디", in = ParameterIn.HEADER),
-            @Parameter(name = "centerId", description = "센터 UUID", in = ParameterIn.QUERY, required = true)
+            @Parameter(name = "gymTicketId", description = "헬스장 이용권 UUID", in = ParameterIn.PATH, required = true)
     })
     public ResponseEntity<String> updateTicket(
             @RequestHeader("id") String userId,
@@ -61,5 +61,17 @@ public class GymTicketController {
             @RequestBody GymTicketModifyRequest gymTicketModifyRequest
     ) {
         return new ResponseEntity<>(this.gymTicketService.updateTicket(UUID.fromString(userId), UUID.fromString(gymTicketId), gymTicketModifyRequest), HttpStatus.OK);
+    }
+    @DeleteMapping("/delete/{gymTicketId}")
+    @Operation(description = "헬스장 이용권 삭제")
+    @Parameters({
+            @Parameter(name = "userId", description = "액세스 토큰 아이디", in = ParameterIn.HEADER),
+            @Parameter(name = "gymTicketId", description = "헬스장 이용권 UUID", in = ParameterIn.PATH, required = true)
+    })
+    public ResponseEntity<String> deleteTicket(
+            @RequestHeader("id") String userId,
+            @PathVariable String gymTicketId
+    ) {
+        return new ResponseEntity<>(this.gymTicketService.deleteTicket(UUID.fromString(userId), UUID.fromString(gymTicketId)), HttpStatus.OK);
     }
 }

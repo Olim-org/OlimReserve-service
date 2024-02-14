@@ -75,5 +75,8 @@ public class GymTicket extends BaseEntity {
         this.startTime = startTime;
         this.endTime = endTime;
     }
+    public void updateStatus(TicketStatus status) {
+        this.status = status;
+    }
 
 }

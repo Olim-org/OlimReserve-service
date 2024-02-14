@@ -7,6 +7,7 @@ import com.olim.reserveservice.dto.request.GymTicketModifyRequest;
 import com.olim.reserveservice.dto.response.CenterFeignResponse;
 import com.olim.reserveservice.dto.response.GymTicketGetListResonse;
 import com.olim.reserveservice.entity.GymTicket;
+import com.olim.reserveservice.enumeration.TicketStatus;
 import com.olim.reserveservice.exception.customexception.CustomException;
 import com.olim.reserveservice.exception.customexception.DataNotFoundException;
 import com.olim.reserveservice.exception.customexception.PermissionFailException;
@@ -62,7 +63,7 @@ public class GymTicketServiceImpl implements GymTicketService {
         if (!centerFeignResponse.owner().equals(userId)) {
             throw new PermissionFailException("이용권을 조회할 권한이 없습니다.");
         }
-        List<GymTicket> gymTickets = gymTicketRepository.findAllByCenterId(centerId);
+        List<GymTicket> gymTickets = gymTicketRepository.findAllByCenterIdAndStatusIsNot(centerId, TicketStatus.DELETE);
         GymTicketGetListResonse gymTicketGetListResonse = GymTicketGetListResonse
                 .makeDto(gymTickets);
         return gymTicketGetListResonse;
@@ -95,6 +96,26 @@ public class GymTicketServiceImpl implements GymTicketService {
                 LocalDateTime.parse(gymTicketModifyRequest.endTime(), DateTimeFormatter.ISO_TIME),
                 gymTicketModifyRequest.ticketStatus()
         );
+        this.gymTicketRepository.save(gotGymTicket);
         return "성공적으로 이용권이 수정 되었습니다.";
+    }
+    @Transactional
+    @Override
+    public String deleteTicket(UUID userId, UUID ticketId) {
+        Optional<GymTicket> gymTicket = gymTicketRepository.findById(ticketId);
+        if (!gymTicket.isPresent()) {
+            throw new DataNotFoundException("해당 아이디의 이용권이 존재하지 않습니다.");
+        }
+        CenterFeignResponse centerFeignResponse = customerClient.getCenterInfo(userId.toString(), gymTicket.get().getCenterId().toString());
+        if (centerFeignResponse == null) {
+            throw new DataNotFoundException("해당 센터를 찾을 수 없습니다.");
+        }
+        if (!centerFeignResponse.owner().equals(userId)) {
+            throw new PermissionFailException("이용권을 삭제할 권한이 없습니다.");
+        }
+        GymTicket gotGymTicket = gymTicket.get();
+        gotGymTicket.updateStatus(TicketStatus.DELETE);
+        this.gymTicketRepository.save(gotGymTicket);
+        return "성공적으로 이용권이 삭제 되었습니다.";
     }
 }

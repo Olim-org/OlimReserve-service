@@ -14,4 +14,6 @@ public interface GymTicketService {
     GymTicketGetListResonse getTicketList(UUID userId, UUID centerId);
     @Transactional
     String updateTicket(UUID userId, UUID ticketId, GymTicketModifyRequest gymTicketModifyRequest);
+    @Transactional
+    String deleteTicket(UUID userId, UUID ticketId);
 }
