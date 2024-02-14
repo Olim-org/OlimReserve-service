@@ -1,16 +1,16 @@
 package com.olim.reserveservice.dto.request;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import com.olim.reserveservice.enumeration.TicketStatus;
 
-public record GymTicketCreateRequest(
-        UUID centerId,
+public record TicketModifyRequest(
         String title,
         String description,
         String price,
         String sale,
         Integer applyDays,
+        Integer validCount,
         String startTime,
-        String endTime
+        String endTime,
+        TicketStatus ticketStatus
 ) {
 }

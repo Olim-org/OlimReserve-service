@@ -1,6 +1,7 @@
 package com.olim.reserveservice.entity;
 
 import com.olim.reserveservice.enumeration.TicketStatus;
+import com.olim.reserveservice.enumeration.TicketType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GymTicket extends BaseEntity {
+public class Ticket extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -27,34 +28,41 @@ public class GymTicket extends BaseEntity {
     private String description;
     private String price;
     private String sale;
-    private Integer applyDays;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    @Enumerated(value = EnumType.STRING)
+    private TicketType type;
+    private Integer applyDays;  // 사용 가능 일 수
+    private Integer validCount; // 사용 가능 횟 수
+    private LocalDateTime startTime; // 사용 가능 시간
+    private LocalDateTime endTime;  // 사용 가능 시간
     @Enumerated(value = EnumType.STRING)
     private TicketStatus status;
     @OneToMany(mappedBy = "gymTicket", cascade = CascadeType.ALL)
-    private List<GymTicketCustomer> gymTicketCustomers;
+    private List<TicketCustomer> ticketCustomers;
     @Builder
-    public GymTicket(
+    public Ticket(
             UUID centerId,
             String title,
             String description,
             String price,
             String sale,
             Integer applyDays,
+            Integer validCount,
             LocalDateTime startTime,
-            LocalDateTime endTime
+            LocalDateTime endTime,
+            TicketType type
     ) {
         this.centerId = centerId;
         this.title = title;
         this.description = description;
         this.price = price;
         this.sale = sale;
+        this.type = type;
         this.status = TicketStatus.WAIT;
         this.applyDays = applyDays;
+        this.validCount = validCount;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.gymTicketCustomers = new ArrayList<>();
+        this.ticketCustomers = new ArrayList<>();
     }
     public void updateTicket(
             String title,
@@ -62,6 +70,7 @@ public class GymTicket extends BaseEntity {
             String price,
             String sale,
             Integer applyDays,
+            Integer validCount,
             LocalDateTime startTime,
             LocalDateTime endTime,
             TicketStatus ticketStatus
@@ -72,6 +81,7 @@ public class GymTicket extends BaseEntity {
         this.sale = sale;
         this.status = ticketStatus;
         this.applyDays = applyDays;
+        this.validCount = validCount;
         this.startTime = startTime;
         this.endTime = endTime;
     }

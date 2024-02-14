@@ -1,9 +1,9 @@
 package com.olim.reserveservice.controller;
 
-import com.olim.reserveservice.dto.request.GymTicketCreateRequest;
-import com.olim.reserveservice.dto.request.GymTicketModifyRequest;
-import com.olim.reserveservice.dto.response.GymTicketGetListResonse;
-import com.olim.reserveservice.service.GymTicketService;
+import com.olim.reserveservice.dto.request.TicketCreateRequest;
+import com.olim.reserveservice.dto.request.TicketModifyRequest;
+import com.olim.reserveservice.dto.response.TicketGetListResonse;
+import com.olim.reserveservice.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -22,10 +22,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "헬스장 이용권", description = "헬스장 이용권 관련 API 구성")
-@RequestMapping("/reserve-service/ticket/gym")
+@RequestMapping("/reserve-service/ticket")
 @Validated
-public class GymTicketController {
-    private final GymTicketService gymTicketService;
+public class TicketController {
+    private final TicketService ticketService;
     @PostMapping("/create")
     @Operation(description = "헬스장 이용권 등록")
     @Parameters({
@@ -33,9 +33,9 @@ public class GymTicketController {
     })
     public ResponseEntity<String> createGymTicket(
             @RequestHeader("id") String userId,
-            @RequestBody GymTicketCreateRequest gymTicketCreateRequest
+            @RequestBody TicketCreateRequest ticketCreateRequest
     ) {
-        return new ResponseEntity<>(this.gymTicketService.createGymTicket(UUID.fromString(userId), gymTicketCreateRequest), HttpStatus.OK);
+        return new ResponseEntity<>(this.ticketService.createGymTicket(UUID.fromString(userId), ticketCreateRequest), HttpStatus.OK);
     }
     @GetMapping("/list")
     @Operation(description = "헬스장 이용권 전체 조회")
@@ -43,11 +43,11 @@ public class GymTicketController {
             @Parameter(name = "userId", description = "액세스 토큰 아이디", in = ParameterIn.HEADER),
             @Parameter(name = "centerId", description = "센터 UUID", in = ParameterIn.QUERY, required = true)
     })
-    public ResponseEntity<GymTicketGetListResonse> getTicketList(
+    public ResponseEntity<TicketGetListResonse> getTicketList(
             @RequestHeader("id") String userId,
             @RequestParam(value = "centerId") String centerId
     ) {
-        return new ResponseEntity<>(this.gymTicketService.getTicketList(UUID.fromString(userId), UUID.fromString(centerId)), HttpStatus.OK);
+        return new ResponseEntity<>(this.ticketService.getTicketList(UUID.fromString(userId), UUID.fromString(centerId)), HttpStatus.OK);
     }
     @PutMapping("/modify/{gymTicketId}")
     @Operation(description = "헬스장 이용권 수정")
@@ -58,9 +58,9 @@ public class GymTicketController {
     public ResponseEntity<String> updateTicket(
             @RequestHeader("id") String userId,
             @PathVariable String gymTicketId,
-            @RequestBody GymTicketModifyRequest gymTicketModifyRequest
+            @RequestBody TicketModifyRequest ticketModifyRequest
     ) {
-        return new ResponseEntity<>(this.gymTicketService.updateTicket(UUID.fromString(userId), UUID.fromString(gymTicketId), gymTicketModifyRequest), HttpStatus.OK);
+        return new ResponseEntity<>(this.ticketService.updateTicket(UUID.fromString(userId), UUID.fromString(gymTicketId), ticketModifyRequest), HttpStatus.OK);
     }
     @DeleteMapping("/delete/{gymTicketId}")
     @Operation(description = "헬스장 이용권 삭제")
@@ -72,6 +72,6 @@ public class GymTicketController {
             @RequestHeader("id") String userId,
             @PathVariable String gymTicketId
     ) {
-        return new ResponseEntity<>(this.gymTicketService.deleteTicket(UUID.fromString(userId), UUID.fromString(gymTicketId)), HttpStatus.OK);
+        return new ResponseEntity<>(this.ticketService.deleteTicket(UUID.fromString(userId), UUID.fromString(gymTicketId)), HttpStatus.OK);
     }
 }
