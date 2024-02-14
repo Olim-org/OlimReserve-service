@@ -2,6 +2,7 @@ package com.olim.reserveservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.olim.reserveservice.enumeration.TicketCustomerType;
+import com.olim.reserveservice.enumeration.TicketType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -26,9 +28,12 @@ public class TicketCustomer extends BaseEntity{
     @ToString.Exclude
     @JoinColumn(name = "TICKET_ID")
     private Ticket ticket;
+    private TicketType ticketType;
     private Long customerId;
     private LocalDate startDate;
     private LocalDate endDate;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private Integer validDays;
     private Integer validCounts;
     private TicketCustomerType type;
