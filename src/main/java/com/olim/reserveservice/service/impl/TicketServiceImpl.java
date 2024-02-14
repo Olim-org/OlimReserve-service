@@ -16,6 +16,10 @@ import com.olim.reserveservice.repository.TicketRepository;
 import com.olim.reserveservice.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,7 +85,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public TicketGetListResonse getTicketList(UUID userId, UUID centerId) {
+    public TicketGetListResonse getTicketList(UUID userId, UUID centerId, int page, int count, String sortBy, Boolean orderByDesc, String type) {
         CenterFeignResponse centerFeignResponse = customerClient.getCenterInfo(userId.toString(), centerId.toString());
         if (centerFeignResponse == null) {
             throw new DataNotFoundException("해당 센터를 찾을 수 없습니다.");
@@ -89,7 +93,14 @@ public class TicketServiceImpl implements TicketService {
         if (!centerFeignResponse.owner().equals(userId)) {
             throw new PermissionFailException("이용권을 조회할 권한이 없습니다.");
         }
-        List<Ticket> tickets = ticketRepository.findAllByCenterIdAndStatusIsNot(centerId, TicketStatus.DELETE);
+        if (!(sortBy.equals("title") || sortBy.equals("cAt"))) {
+            sortBy = "title";
+        }
+        Sort sort = (orderByDesc) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, count, sort);
+
+        Page<Ticket> tickets = ticketRepository.findAllByCenterIdAndTypeAndStatusIsNot(centerId, TicketType.valueOf(type), TicketStatus.DELETE, pageable);
         TicketGetListResonse ticketGetListResonse = TicketGetListResonse
                 .makeDto(tickets);
         return ticketGetListResonse;

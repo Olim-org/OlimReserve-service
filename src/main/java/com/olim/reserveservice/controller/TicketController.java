@@ -41,13 +41,22 @@ public class TicketController {
     @Operation(description = "헬스장 이용권 전체 조회")
     @Parameters({
             @Parameter(name = "userId", description = "액세스 토큰 아이디", in = ParameterIn.HEADER),
-            @Parameter(name = "centerId", description = "센터 UUID", in = ParameterIn.QUERY, required = true)
+            @Parameter(name = "centerId", description = "센터 UUID", in = ParameterIn.QUERY, required = true),
+            @Parameter(name = "page", description = "페이지", in = ParameterIn.QUERY, required = false, example = "0"),
+            @Parameter(name = "count", description = "페이지 내 아이템 수", in = ParameterIn.QUERY, required = false, example = "20"),
+            @Parameter(name = "sortBy", description = "정렬 기준", in = ParameterIn.QUERY, example = "title"),
+            @Parameter(name = "orderByDesc", description = "내림차순", in = ParameterIn.QUERY, example = "true")
     })
     public ResponseEntity<TicketGetListResonse> getTicketList(
             @RequestHeader("id") String userId,
-            @RequestParam(value = "centerId") String centerId
+            @RequestParam(value = "centerId") String centerId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "count", defaultValue = "50") int count,
+            @RequestParam(value = "sortBy", defaultValue = "title") String sortBy,
+            @RequestParam(value = "orderByDesc", defaultValue = "true") Boolean orderByDesc,
+            @RequestParam(value = "type", defaultValue = "GYM") String type
     ) {
-        return new ResponseEntity<>(this.ticketService.getTicketList(UUID.fromString(userId), UUID.fromString(centerId)), HttpStatus.OK);
+        return new ResponseEntity<>(this.ticketService.getTicketList(UUID.fromString(userId), UUID.fromString(centerId), page, count, sortBy, orderByDesc, type), HttpStatus.OK);
     }
     @PutMapping("/modify/{gymTicketId}")
     @Operation(description = "헬스장 이용권 수정")
