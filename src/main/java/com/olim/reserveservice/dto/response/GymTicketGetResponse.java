@@ -1,6 +1,7 @@
 package com.olim.reserveservice.dto.response;
 
 import com.olim.reserveservice.entity.GymTicket;
+import com.olim.reserveservice.enumeration.TicketStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,7 +16,8 @@ public record GymTicketGetResponse(
         String sale,
         Integer applyDays,
         String startTime,
-        String endTime
+        String endTime,
+        TicketStatus status
 ) {
     public static GymTicketGetResponse makeDto(GymTicket gymTicket) {
         GymTicketGetResponse response = new GymTicketGetResponse(
@@ -27,7 +29,8 @@ public record GymTicketGetResponse(
                 gymTicket.getSale(),
                 gymTicket.getApplyDays(),
                 gymTicket.getStartTime().format(DateTimeFormatter.ISO_TIME),
-                gymTicket.getEndTime().format(DateTimeFormatter.ISO_TIME)
+                gymTicket.getEndTime().format(DateTimeFormatter.ISO_TIME),
+                gymTicket.getStatus()
         );
         return response;
     }
