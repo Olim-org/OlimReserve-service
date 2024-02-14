@@ -1,6 +1,7 @@
 package com.olim.reserveservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.olim.reserveservice.enumeration.TicketCustomerType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,15 +19,18 @@ public class TicketCustomer extends BaseEntity{
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "GYM_TICKET_CUSTOMER_ID", columnDefinition = "BINARY(16)")
+    @Column(name = "TICKET_CUSTOMER_ID", columnDefinition = "BINARY(16)")
     private UUID id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @ToString.Exclude
-    @JoinColumn(name = "GYM_TICKET_ID")
+    @JoinColumn(name = "TICKET_ID")
     private Ticket ticket;
     private Long customerId;
     private LocalDate startDate;
     private LocalDate endDate;
+    private Integer validDays;
+    private Integer validCounts;
+    private TicketCustomerType type;
 
 }

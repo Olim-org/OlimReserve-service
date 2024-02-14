@@ -31,7 +31,7 @@ public record TicketGetResponse(
                 ticket.getSale(),
                 ticket.getType(),
                 ticket.getApplyDays(),
-                ticket.getValidCount(),
+                ticket.getValidCounts(),
                 ticket.getStartTime().format(DateTimeFormatter.ISO_TIME),
                 ticket.getEndTime().format(DateTimeFormatter.ISO_TIME),
                 ticket.getStatus()

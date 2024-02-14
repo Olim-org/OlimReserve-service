@@ -52,7 +52,7 @@ public class TicketServiceImpl implements TicketService {
                         .sale(ticketCreateRequest.sale())
                         .type(TicketType.GYM)
                         .applyDays(ticketCreateRequest.applyDays())
-                        .validCount(null)
+                        .validCounts(null)
                         .startTime(LocalDateTime.parse(ticketCreateRequest.startTime(), DateTimeFormatter.ISO_TIME))
                         .endTime(LocalDateTime.parse(ticketCreateRequest.endTime(), DateTimeFormatter.ISO_TIME))
                         .build();
@@ -68,7 +68,7 @@ public class TicketServiceImpl implements TicketService {
                         .sale(ticketCreateRequest.sale())
                         .type(TicketType.PT)
                         .applyDays(ticketCreateRequest.applyDays())
-                        .validCount(ticketCreateRequest.validCount())
+                        .validCounts(ticketCreateRequest.validCount())
                         .startTime(LocalDateTime.parse(ticketCreateRequest.startTime(), DateTimeFormatter.ISO_TIME))
                         .endTime(LocalDateTime.parse(ticketCreateRequest.endTime(), DateTimeFormatter.ISO_TIME))
                         .build();

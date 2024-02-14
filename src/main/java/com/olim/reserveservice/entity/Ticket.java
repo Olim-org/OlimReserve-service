@@ -21,7 +21,7 @@ public class Ticket extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "GYM_TICKET_ID", columnDefinition = "BINARY(16)")
+    @Column(name = "TICKET_ID", columnDefinition = "BINARY(16)")
     private UUID id;
     private UUID centerId;
     private String title;
@@ -31,12 +31,12 @@ public class Ticket extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private TicketType type;
     private Integer applyDays;  // 사용 가능 일 수
-    private Integer validCount; // 사용 가능 횟 수
+    private Integer validCounts; // 사용 가능 횟 수
     private LocalDateTime startTime; // 사용 가능 시간
     private LocalDateTime endTime;  // 사용 가능 시간
     @Enumerated(value = EnumType.STRING)
     private TicketStatus status;
-    @OneToMany(mappedBy = "gymTicket", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
     private List<TicketCustomer> ticketCustomers;
     @Builder
     public Ticket(
@@ -46,7 +46,7 @@ public class Ticket extends BaseEntity {
             String price,
             String sale,
             Integer applyDays,
-            Integer validCount,
+            Integer validCounts,
             LocalDateTime startTime,
             LocalDateTime endTime,
             TicketType type
@@ -59,7 +59,7 @@ public class Ticket extends BaseEntity {
         this.type = type;
         this.status = TicketStatus.WAIT;
         this.applyDays = applyDays;
-        this.validCount = validCount;
+        this.validCounts = validCounts;
         this.startTime = startTime;
         this.endTime = endTime;
         this.ticketCustomers = new ArrayList<>();
@@ -70,7 +70,7 @@ public class Ticket extends BaseEntity {
             String price,
             String sale,
             Integer applyDays,
-            Integer validCount,
+            Integer validCounts,
             LocalDateTime startTime,
             LocalDateTime endTime,
             TicketStatus ticketStatus
@@ -81,7 +81,7 @@ public class Ticket extends BaseEntity {
         this.sale = sale;
         this.status = ticketStatus;
         this.applyDays = applyDays;
-        this.validCount = validCount;
+        this.validCounts = validCounts;
         this.startTime = startTime;
         this.endTime = endTime;
     }
