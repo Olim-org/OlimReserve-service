@@ -42,6 +42,7 @@ public class Ticket extends BaseEntity {
     private LocalTime endTime;  // 사용 가능 시간
     @Enumerated(value = EnumType.STRING)
     private TicketStatus status;
+    @Column(length = 5000)
     private String customJson;
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
     private List<TicketCustomer> ticketCustomers;
