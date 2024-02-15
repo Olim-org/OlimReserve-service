@@ -16,6 +16,6 @@ public record TicketCreateRequest(
         Integer validCount,
         String startTime,
         String endTime,
-        Map<String, String> customJson
+        String customJson
 ) {
 }

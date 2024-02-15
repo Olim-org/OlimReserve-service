@@ -21,7 +21,7 @@ public record TicketGetResponse(
         String startTime,
         String endTime,
         TicketStatus status,
-        Map<String, String> customJson
+        String customJson
 ) {
     public static TicketGetResponse makeDto(Ticket ticket) {
         TicketGetResponse response = new TicketGetResponse(

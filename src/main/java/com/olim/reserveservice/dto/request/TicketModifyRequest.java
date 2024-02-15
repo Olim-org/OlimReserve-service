@@ -14,6 +14,6 @@ public record TicketModifyRequest(
         String startTime,
         String endTime,
         TicketStatus ticketStatus,
-        Map<String, String> customJson
+        String customJson
 ) {
 }

@@ -42,9 +42,7 @@ public class Ticket extends BaseEntity {
     private LocalTime endTime;  // 사용 가능 시간
     @Enumerated(value = EnumType.STRING)
     private TicketStatus status;
-    @Type(JsonType.class)
-    @Column(name = "customJson", columnDefinition = "longtext")
-    private Map<String, String> customJson;
+    private String customJson;
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
     private List<TicketCustomer> ticketCustomers;
     @Builder
@@ -59,7 +57,7 @@ public class Ticket extends BaseEntity {
             LocalTime startTime,
             LocalTime endTime,
             TicketType type,
-            Map<String, String> customJson
+            String customJson
     ) {
         this.centerId = centerId;
         this.title = title;
@@ -84,7 +82,7 @@ public class Ticket extends BaseEntity {
             Integer validCounts,
             LocalTime startTime,
             LocalTime endTime,
-            Map<String, String> customJson,
+            String customJson,
             TicketStatus ticketStatus
     ) {
         this.title = title;
