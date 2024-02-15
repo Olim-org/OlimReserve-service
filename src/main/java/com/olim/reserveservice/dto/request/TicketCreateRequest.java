@@ -2,6 +2,7 @@ package com.olim.reserveservice.dto.request;
 
 import com.olim.reserveservice.enumeration.TicketType;
 
+import java.util.Map;
 import java.util.UUID;
 
 public record TicketCreateRequest(
@@ -14,6 +15,7 @@ public record TicketCreateRequest(
         Integer applyDays,
         Integer validCount,
         String startTime,
-        String endTime
+        String endTime,
+        Map<String, String> customJson
 ) {
 }

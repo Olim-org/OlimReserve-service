@@ -2,23 +2,28 @@ package com.olim.reserveservice.entity;
 
 import com.olim.reserveservice.enumeration.TicketStatus;
 import com.olim.reserveservice.enumeration.TicketType;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Ticket extends BaseEntity {
+    @Data
+    static class customJson {
+        private String key;
+        private String value;
+    }
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -37,6 +42,9 @@ public class Ticket extends BaseEntity {
     private LocalTime endTime;  // 사용 가능 시간
     @Enumerated(value = EnumType.STRING)
     private TicketStatus status;
+    @Type(JsonType.class)
+    @Column(name = "customJson", columnDefinition = "longtext")
+    private Map<String, String> customJson;
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
     private List<TicketCustomer> ticketCustomers;
     @Builder
@@ -50,7 +58,8 @@ public class Ticket extends BaseEntity {
             Integer validCounts,
             LocalTime startTime,
             LocalTime endTime,
-            TicketType type
+            TicketType type,
+            Map<String, String> customJson
     ) {
         this.centerId = centerId;
         this.title = title;
@@ -63,6 +72,7 @@ public class Ticket extends BaseEntity {
         this.validCounts = validCounts;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.customJson = customJson;
         this.ticketCustomers = new ArrayList<>();
     }
     public void updateTicket(
@@ -74,6 +84,7 @@ public class Ticket extends BaseEntity {
             Integer validCounts,
             LocalTime startTime,
             LocalTime endTime,
+            Map<String, String> customJson,
             TicketStatus ticketStatus
     ) {
         this.title = title;
@@ -84,6 +95,7 @@ public class Ticket extends BaseEntity {
         this.applyDays = applyDays;
         this.validCounts = validCounts;
         this.startTime = startTime;
+        this.customJson = customJson;
         this.endTime = endTime;
     }
     public void updateStatus(TicketStatus status) {

@@ -2,6 +2,8 @@ package com.olim.reserveservice.dto.request;
 
 import com.olim.reserveservice.enumeration.TicketStatus;
 
+import java.util.Map;
+
 public record TicketModifyRequest(
         String title,
         String description,
@@ -11,6 +13,7 @@ public record TicketModifyRequest(
         Integer validCount,
         String startTime,
         String endTime,
-        TicketStatus ticketStatus
+        TicketStatus ticketStatus,
+        Map<String, String> customJson
 ) {
 }

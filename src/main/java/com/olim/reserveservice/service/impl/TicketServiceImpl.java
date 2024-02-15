@@ -60,6 +60,7 @@ public class TicketServiceImpl implements TicketService {
                         .validCounts(null)
                         .startTime(LocalTime.parse(ticketCreateRequest.startTime()))
                         .endTime(LocalTime.parse(ticketCreateRequest.endTime(), DateTimeFormatter.ISO_TIME))
+                        .customJson(ticketCreateRequest.customJson())
                         .build();
                 this.ticketRepository.save(ticket);
                 break;
@@ -76,8 +77,10 @@ public class TicketServiceImpl implements TicketService {
                         .validCounts(ticketCreateRequest.validCount())
                         .startTime(LocalTime.parse(ticketCreateRequest.startTime(), DateTimeFormatter.ISO_TIME))
                         .endTime(LocalTime.parse(ticketCreateRequest.endTime(), DateTimeFormatter.ISO_TIME))
+                        .customJson(ticketCreateRequest.customJson())
                         .build();
                 this.ticketRepository.save(ticket);
+                break;
             }
         }
 
@@ -135,6 +138,7 @@ public class TicketServiceImpl implements TicketService {
                         null,
                         LocalTime.parse(ticketModifyRequest.startTime(), DateTimeFormatter.ISO_TIME),
                         LocalTime.parse(ticketModifyRequest.endTime(), DateTimeFormatter.ISO_TIME),
+                        ticketModifyRequest.customJson(),
                         ticketModifyRequest.ticketStatus()
                 );
                 ticketRepository.save(gotTicket);
@@ -150,6 +154,7 @@ public class TicketServiceImpl implements TicketService {
                         ticketModifyRequest.validCount(),
                         LocalTime.parse(ticketModifyRequest.startTime(), DateTimeFormatter.ISO_TIME),
                         LocalTime.parse(ticketModifyRequest.endTime(), DateTimeFormatter.ISO_TIME),
+                        ticketModifyRequest.customJson(),
                         ticketModifyRequest.ticketStatus()
                 );
                 ticketRepository.save(gotTicket);

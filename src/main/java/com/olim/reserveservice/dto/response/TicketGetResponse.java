@@ -5,6 +5,7 @@ import com.olim.reserveservice.enumeration.TicketStatus;
 import com.olim.reserveservice.enumeration.TicketType;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.UUID;
 
 public record TicketGetResponse(
@@ -19,7 +20,8 @@ public record TicketGetResponse(
         Integer validCount,
         String startTime,
         String endTime,
-        TicketStatus status
+        TicketStatus status,
+        Map<String, String> customJson
 ) {
     public static TicketGetResponse makeDto(Ticket ticket) {
         TicketGetResponse response = new TicketGetResponse(
@@ -34,7 +36,8 @@ public record TicketGetResponse(
                 ticket.getValidCounts(),
                 ticket.getStartTime().format(DateTimeFormatter.ISO_TIME),
                 ticket.getEndTime().format(DateTimeFormatter.ISO_TIME),
-                ticket.getStatus()
+                ticket.getStatus(),
+                ticket.getCustomJson()
         );
         return response;
     }
