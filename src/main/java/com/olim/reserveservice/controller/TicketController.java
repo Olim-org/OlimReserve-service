@@ -45,6 +45,7 @@ public class TicketController {
             @Parameter(name = "page", description = "페이지", in = ParameterIn.QUERY, required = false, example = "0"),
             @Parameter(name = "count", description = "페이지 내 아이템 수", in = ParameterIn.QUERY, required = false, example = "20"),
             @Parameter(name = "sortBy", description = "정렬 기준", in = ParameterIn.QUERY, example = "title"),
+            @Parameter(name = "keyword", description = "검색어", in = ParameterIn.QUERY, example = "헬스장"),
             @Parameter(name = "orderByDesc", description = "내림차순", in = ParameterIn.QUERY, example = "true")
     })
     public ResponseEntity<TicketGetListResonse> getTicketList(
@@ -53,10 +54,11 @@ public class TicketController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "count", defaultValue = "50") int count,
             @RequestParam(value = "sortBy", defaultValue = "title") String sortBy,
+            @RequestParam(value = "keyword", defaultValue = "") String keyword,
             @RequestParam(value = "orderByDesc", defaultValue = "true") Boolean orderByDesc,
             @RequestParam(value = "type", defaultValue = "GYM") String type
     ) {
-        return new ResponseEntity<>(this.ticketService.getTicketList(UUID.fromString(userId), UUID.fromString(centerId), page, count, sortBy, orderByDesc, type), HttpStatus.OK);
+        return new ResponseEntity<>(this.ticketService.getTicketList(UUID.fromString(userId), UUID.fromString(centerId), page, count, sortBy, keyword, orderByDesc, type), HttpStatus.OK);
     }
     @PutMapping("/modify/{gymTicketId}")
     @Operation(description = "헬스장 이용권 수정")

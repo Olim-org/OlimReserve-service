@@ -88,7 +88,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public TicketGetListResonse getTicketList(UUID userId, UUID centerId, int page, int count, String sortBy, Boolean orderByDesc, String type) {
+    public TicketGetListResonse getTicketList(UUID userId, UUID centerId, int page, int count, String sortBy, String keyword, Boolean orderByDesc, String type) {
         CenterFeignResponse centerFeignResponse = customerClient.getCenterInfo(userId.toString(), centerId.toString());
         if (centerFeignResponse == null) {
             throw new DataNotFoundException("해당 센터를 찾을 수 없습니다.");
@@ -103,7 +103,7 @@ public class TicketServiceImpl implements TicketService {
 
         Pageable pageable = PageRequest.of(page, count, sort);
 
-        Page<Ticket> tickets = ticketRepository.findAllByCenterIdAndTypeAndStatusIsNot(centerId, TicketType.valueOf(type), TicketStatus.DELETE, pageable);
+        Page<Ticket> tickets = ticketRepository.findAllByCenterIdAndTypeAndStatusIsNotAndTitleContaining(centerId, TicketType.valueOf(type), TicketStatus.DELETE, keyword, pageable);
         TicketGetListResonse ticketGetListResonse = TicketGetListResonse
                 .makeDto(tickets);
         return ticketGetListResonse;
