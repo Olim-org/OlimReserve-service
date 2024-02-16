@@ -1,13 +1,11 @@
 package com.olim.reserveservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.olim.reserveservice.enumeration.PaymentMethod;
 import com.olim.reserveservice.enumeration.TicketCustomerType;
 import com.olim.reserveservice.enumeration.TicketType;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
@@ -29,14 +27,58 @@ public class TicketCustomer extends BaseEntity{
     @ToString.Exclude
     @JoinColumn(name = "TICKET_ID")
     private Ticket ticket;
+    @Enumerated(value = EnumType.STRING)
     private TicketType ticketType;
     private Long customerId;
+    private String customerName;
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalTime startTime;
     private LocalTime endTime;
-    private Integer validDays;
     private Integer validCounts;
+    @Enumerated(value = EnumType.STRING)
     private TicketCustomerType type;
+    @Enumerated(value = EnumType.STRING)
+    private PaymentMethod paymentMethod;
+    private String price;
+    private String paidPrice;
+    @Column(columnDefinition = "longtext")
+    private String description;
+    @Column(columnDefinition = "longtext")
+    private String customJson;
 
+    @Builder
+    public TicketCustomer(
+            Ticket ticket,
+            TicketType ticketType,
+            Long customerId,
+            String customerName,
+            LocalDate startDate,
+            LocalDate endDate,
+            LocalTime startTime,
+            LocalTime endTime,
+            Integer validCounts,
+            PaymentMethod paymentMethod,
+            String price,
+            String paidPrice,
+            TicketCustomerType type,
+            String description,
+            String customJson
+    ) {
+        this.ticket = ticket;
+        this.ticketType = ticketType;
+        this.customerId = customerId;
+        this.customerName = customerName;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.validCounts = validCounts;
+        this.paymentMethod = paymentMethod;
+        this.price = price;
+        this.paidPrice = paidPrice;
+        this.type = type;
+        this.description = description;
+        this.customJson = customJson;
+    }
 }
