@@ -110,7 +110,7 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
             sort = Sort.by(Sort.Direction.ASC, sortBy);
         }
         Pageable pageable = PageRequest.of(page, count, sort);
-        Page<TicketCustomer> ticketCustomerPage = this.ticketCustomerRepository.findAllByCenterIdAAndCustomerName(UUID.fromString(centerId), name, pageable);
+        Page<TicketCustomer> ticketCustomerPage = this.ticketCustomerRepository.findAllByCenterIdAndCustomerName(UUID.fromString(centerId), name, pageable);
         TicketCustomerGetListResponse ticketCustomerGetListResponse =
                 TicketCustomerGetListResponse.makeDto(ticketCustomerPage);
         return ticketCustomerGetListResponse;

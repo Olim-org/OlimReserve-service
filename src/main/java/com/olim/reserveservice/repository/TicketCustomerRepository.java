@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 @Repository
 public interface TicketCustomerRepository extends JpaRepository<TicketCustomer, UUID> {
-    Page<TicketCustomer> findAllByCenterIdAAndCustomerName(UUID centerId, String customerName, Pageable pageable);
+    Page<TicketCustomer> findAllByCenterIdAndCustomerName(UUID centerId, String customerName, Pageable pageable);
 }
