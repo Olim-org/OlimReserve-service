@@ -29,6 +29,7 @@ public class TicketCustomer extends BaseEntity{
     private Ticket ticket;
     @Enumerated(value = EnumType.STRING)
     private TicketType ticketType;
+    private UUID centerId;
     private Long customerId;
     private String customerName;
     private LocalDate startDate;
@@ -51,6 +52,7 @@ public class TicketCustomer extends BaseEntity{
     public TicketCustomer(
             Ticket ticket,
             TicketType ticketType,
+            UUID centerId,
             Long customerId,
             String customerName,
             LocalDate startDate,
@@ -67,6 +69,7 @@ public class TicketCustomer extends BaseEntity{
     ) {
         this.ticket = ticket;
         this.ticketType = ticketType;
+        this.centerId = centerId;
         this.customerId = customerId;
         this.customerName = customerName;
         this.startDate = startDate;

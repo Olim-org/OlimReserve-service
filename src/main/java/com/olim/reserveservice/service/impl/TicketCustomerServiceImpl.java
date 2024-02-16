@@ -58,6 +58,7 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
         switch (gotTicket.getType()) {
             case GYM -> {
                 TicketCustomer ticketCustomer = TicketCustomer.builder()
+                        .centerId(centerFeignResponse.centerId())
                         .customerId(ticketCustomerGiveRequest.customerId())
                         .customerName(customerFeignResponse.name())
                         .ticketType(TicketType.GYM)
@@ -78,6 +79,7 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
             case PT -> {
                 TicketCustomer ticketCustomer = TicketCustomer.builder()
                         .customerId(ticketCustomerGiveRequest.customerId())
+                        .centerId(centerFeignResponse.centerId())
                         .customerName(customerFeignResponse.name())
                         .ticketType(TicketType.PT)
                         .ticket(gotTicket)

@@ -15,8 +15,12 @@ public record TicketCustomerGetResponse(
         UUID ticketId,
         @Schema(description = "티켓 유형", example = "GYM")
         TicketType ticketType,
+        @Schema(description = "센터 고유번호", example = "asdasf-qweqw-czxc")
+        UUID centerId,
         @Schema(description = "고객 고유번호", example = "5")
         Long customerId,
+        @Schema(description = "고객 이름", example = "홍길동")
+        String customerName,
         @Schema(description = "티켓 시작 날짜", example = "2021-10-01")
         String startDate,
         @Schema(description = "티켓 종료 날짜", example = "2021-10-31")
@@ -47,7 +51,9 @@ public record TicketCustomerGetResponse(
                 ticketCustomer.getId(),
                 ticketCustomer.getTicket().getId(),
                 ticketCustomer.getTicketType(),
+                ticketCustomer.getCenterId(),
                 ticketCustomer.getCustomerId(),
+                ticketCustomer.getCustomerName(),
                 ticketCustomer.getStartDate().toString(),
                 ticketCustomer.getEndDate().toString(),
                 ticketCustomer.getStartTime().toString(),
