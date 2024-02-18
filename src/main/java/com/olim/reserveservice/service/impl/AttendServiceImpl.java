@@ -78,8 +78,11 @@ public class AttendServiceImpl implements AttendService {
                         .customerName(customerFeignResponse.name())
                         .build();
         this.attendRepository.save(attend);
-        gotTicektCustomer.updateValidCounts(gotTicektCustomer.getValidCounts() - 1);
-        this.ticketCustomerRepository.save(gotTicektCustomer);
+        if (gotTicektCustomer.getValidCounts() != null) {
+            gotTicektCustomer.updateValidCounts(gotTicektCustomer.getValidCounts() - 1);
+            this.ticketCustomerRepository.save(gotTicektCustomer);
+        }
+
         return "출석체크 완료";
     }
 
