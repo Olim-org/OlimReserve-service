@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -19,6 +20,7 @@ public class Attend extends BaseEntity {
     private Long customerId;
     private String customerName;
     private UUID centerId;
+    private LocalDateTime attendTime;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TICKET_CUSTOMER_ID")
     @ToString.Exclude
@@ -29,12 +31,14 @@ public class Attend extends BaseEntity {
             Long customerId,
             String customerName,
             UUID centerId,
-            TicketCustomer ticketCustomer
+            TicketCustomer ticketCustomer,
+            LocalDateTime attendTime
     ) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.centerId = centerId;
         this.ticketCustomer = ticketCustomer;
+        this.attendTime = attendTime;
     }
 
 }

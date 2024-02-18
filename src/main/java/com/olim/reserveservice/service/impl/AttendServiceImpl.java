@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -54,7 +55,7 @@ public class AttendServiceImpl implements AttendService {
         if (customerFeignResponse == null) {
             throw new DataNotFoundException("해당 고객을 찾을 수 없습니다.");
         }
-        Optional<TicketCustomer> ticketCustomer = this.ticketCustomerRepository.findByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateAfterAndEndDateBeforeAndStartTimeAfterAndEndTimeBeforeAndValidCountsGreaterThan(
+        Optional<TicketCustomer> ticketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsGreaterThanOrderByCAtDesc(
                 attendCheckRequest.centerId(),
                 attendCheckRequest.customerId(),
                 TicketCustomerType.VALID,
@@ -69,17 +70,19 @@ public class AttendServiceImpl implements AttendService {
             throw new DataNotFoundException("해당 고객의 유효한 이용권을 찾을 수 없습니다.");
         }
         TicketCustomer gotTicektCustomer = ticketCustomer.get();
-        Attend attend = Attend.builder()
-                        .centerId(attendCheckRequest.centerId())
-                        .customerId(attendCheckRequest.customerId())
-                        .customerName(customerFeignResponse.name())
-                        .build();
-        this.attendRepository.save(attend);
+
         if (gotTicektCustomer.getValidCounts() != null) {
             gotTicektCustomer.updateValidCounts(gotTicektCustomer.getValidCounts() - 1);
             this.ticketCustomerRepository.save(gotTicektCustomer);
         }
-
+        Attend attend = Attend.builder()
+                .centerId(attendCheckRequest.centerId())
+                .customerId(attendCheckRequest.customerId())
+                .customerName(customerFeignResponse.name())
+                .ticketCustomer(gotTicektCustomer)
+                .attendTime(LocalDateTime.now())
+                .build();
+        this.attendRepository.save(attend);
         return "출석체크 완료";
     }
 
@@ -100,10 +103,10 @@ public class AttendServiceImpl implements AttendService {
             sort = Sort.by(Sort.Direction.DESC, sortBy);
         }
         Pageable pageable = PageRequest.of(page, count, sort);
-        Page<Attend> ticketCustomers = attendRepository.findAllByCenterIdAndCAtAfterAndCAtBeforeAndCustomerNameContaining(
+        Page<Attend> ticketCustomers = attendRepository.findAllByCenterIdAndAttendTimeAfterAndAttendTimeBeforeAndCustomerNameContaining(
                 UUID.fromString(centerId),
-                LocalDate.parse(date),
-                LocalDate.parse(date),
+                LocalDateTime.of(LocalDate.parse(date), LocalTime.MIN),
+                LocalDateTime.of(LocalDate.parse(date), LocalTime.MAX),
                 keyword,
                 pageable
         );
