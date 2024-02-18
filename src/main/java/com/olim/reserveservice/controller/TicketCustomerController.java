@@ -1,6 +1,7 @@
 package com.olim.reserveservice.controller;
 
 import com.olim.reserveservice.dto.request.TicketCustomerGiveRequest;
+import com.olim.reserveservice.dto.request.TicketCustomerPutRequest;
 import com.olim.reserveservice.dto.response.TicketCustomerGetListResponse;
 import com.olim.reserveservice.dto.response.TicketCustomerGetResponse;
 import com.olim.reserveservice.service.TicketCustomerService;
@@ -77,5 +78,22 @@ public class TicketCustomerController {
             @RequestParam(value = "orderByDesc", defaultValue = "true") Boolean orderByDesc
     ) {
         return ResponseEntity.ok(this.ticketCustomerService.getTicketCustomer(UUID.fromString(userId), Long.parseLong(customerId), page, count, sortBy, orderByDesc));
+    }
+    @PutMapping("/modify/{ticketCustomerId}")
+    @Operation(description = "고객 이용권 수정하기")
+    public ResponseEntity<String> modifyTicketCustomer(
+            @RequestHeader("id") String userId,
+            @PathVariable(value = "ticketCustomerId") String ticketCustomerId,
+            @RequestBody TicketCustomerPutRequest ticketCustomerGiveRequest
+    ) {
+        return ResponseEntity.ok(this.ticketCustomerService.modifyTicketCustomer(UUID.fromString(userId), UUID.fromString(ticketCustomerId), ticketCustomerGiveRequest));
+    }
+    @DeleteMapping("/delete/{ticketCustomerId}")
+    @Operation(description = "고객 이용권 삭제하기")
+    public ResponseEntity<String> deleteTicketCustomer(
+            @RequestHeader("id") String userId,
+            @PathVariable(value = "ticketCustomerId") String ticketCustomerId
+    ) {
+        return ResponseEntity.ok(this.ticketCustomerService.deleteTicketCustomer(UUID.fromString(userId), UUID.fromString(ticketCustomerId)));
     }
 }

@@ -1,6 +1,7 @@
 package com.olim.reserveservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.olim.reserveservice.dto.request.TicketCustomerPutRequest;
 import com.olim.reserveservice.enumeration.PaymentMethod;
 import com.olim.reserveservice.enumeration.TicketCustomerType;
 import com.olim.reserveservice.enumeration.TicketType;
@@ -86,5 +87,40 @@ public class TicketCustomer extends BaseEntity{
     }
     public void updateValidCounts(Integer validCounts) {
         this.validCounts = validCounts;
+    }
+    public void updateTicketCustomer(
+            Ticket ticket,
+            TicketType ticketType,
+            UUID centerId,
+            Long customerId,
+            String customerName,
+            LocalDate startDate,
+            LocalDate endDate,
+            LocalTime startTime,
+            LocalTime endTime,
+            Integer validCounts,
+            PaymentMethod paymentMethod,
+            String price,
+            String paidPrice,
+            TicketCustomerType type,
+            String description,
+            String customJson
+    ) {
+        this.ticket = ticket;
+        this.ticketType = ticketType;
+        this.centerId = centerId;
+        this.customerId = customerId;
+        this.customerName = customerName;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.validCounts = validCounts;
+        this.paymentMethod = paymentMethod;
+        this.price = price;
+        this.paidPrice = paidPrice;
+        this.type = type;
+        this.description = description;
+        this.customJson = customJson;
     }
 }
