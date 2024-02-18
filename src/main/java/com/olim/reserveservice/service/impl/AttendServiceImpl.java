@@ -55,7 +55,7 @@ public class AttendServiceImpl implements AttendService {
         if (customerFeignResponse == null) {
             throw new DataNotFoundException("해당 고객을 찾을 수 없습니다.");
         }
-        Optional<TicketCustomer> ticketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsGreaterThanOrderByCAtDesc(
+        Optional<TicketCustomer> ticketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsGreaterThanOrderByStartDateDesc(
                 attendCheckRequest.centerId(),
                 attendCheckRequest.customerId(),
                 TicketCustomerType.VALID,
