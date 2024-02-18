@@ -43,7 +43,8 @@ public class TicketCustomerController {
             @Parameter(name = "count", description = "페이지 내 아이템 수", in = ParameterIn.QUERY, required = false, example = "20"),
             @Parameter(name = "name", description = "검색어", in = ParameterIn.QUERY, example = "김영웅"),
             @Parameter(name = "sortBy", description = "정렬 기준", in = ParameterIn.QUERY, example = "title"),
-            @Parameter(name = "orderByDesc", description = "내림차순", in = ParameterIn.QUERY, example = "true")
+            @Parameter(name = "orderByDesc", description = "내림차순", in = ParameterIn.QUERY, example = "true"),
+            @Parameter(name = "type", description = "이용권 타입", in = ParameterIn.QUERY, example = "GYM")
     })
     public ResponseEntity<TicketCustomerGetListResponse> getListTicketCustomer(
             @RequestHeader("id") String userId,

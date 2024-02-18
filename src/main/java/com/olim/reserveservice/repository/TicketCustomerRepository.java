@@ -15,9 +15,9 @@ import java.util.Optional;
 import java.util.UUID;
 @Repository
 public interface TicketCustomerRepository extends JpaRepository<TicketCustomer, UUID> {
-    Page<TicketCustomer> findAllByCenterIdAndCustomerNameContaining(UUID centerId, String customerName, Pageable pageable);
+    Page<TicketCustomer> findAllByCenterIdAndTicketTypeAndCustomerNameContaining(UUID centerId, TicketType ticketType, String customerName, Pageable pageable);
     Page<TicketCustomer> findAllByCenterIdAndCustomerId(UUID centerId, Long customerId, Pageable pageable);
-    Optional<TicketCustomer> findByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateAfterAndEndDateBeforeAndStartTimeAfterAndEndTimeBeforeAndValidCountsGreaterThan(
+    Optional<TicketCustomer> findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsGreaterThanOrderByCAtDesc(
             UUID centerId,
             Long customerId,
             TicketCustomerType type,
