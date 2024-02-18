@@ -84,4 +84,7 @@ public class TicketCustomer extends BaseEntity{
         this.description = description;
         this.customJson = customJson;
     }
+    public void updateValidCounts(Integer validCounts) {
+        this.validCounts = validCounts;
+    }
 }
