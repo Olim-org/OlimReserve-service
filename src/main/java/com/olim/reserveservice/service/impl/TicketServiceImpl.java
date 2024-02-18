@@ -58,7 +58,7 @@ public class TicketServiceImpl implements TicketService {
                         .type(TicketType.GYM)
                         .applyDays(ticketCreateRequest.applyDays())
                         .validCounts(null)
-                        .startTime(LocalTime.parse(ticketCreateRequest.startTime()))
+                        .startTime(LocalTime.parse(ticketCreateRequest.startTime(), DateTimeFormatter.ISO_TIME))
                         .endTime(LocalTime.parse(ticketCreateRequest.endTime(), DateTimeFormatter.ISO_TIME))
                         .customJson(ticketCreateRequest.customJson())
                         .build();

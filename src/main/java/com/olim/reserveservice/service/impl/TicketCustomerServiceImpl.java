@@ -55,6 +55,8 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
             throw new DataNotFoundException("해당 고객을 찾을 수 없습니다.");
         }
         Ticket gotTicket = ticket.get();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         switch (gotTicket.getType()) {
             case GYM -> {
                 TicketCustomer ticketCustomer = TicketCustomer.builder()
@@ -63,16 +65,16 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
                         .customerName(customerFeignResponse.name())
                         .ticketType(TicketType.GYM)
                         .ticket(gotTicket)
-                        .startDate(LocalDate.parse(ticketCustomerGiveRequest.startDate(), DateTimeFormatter.ISO_DATE))
-                        .endDate(LocalDate.parse(ticketCustomerGiveRequest.endDate(), DateTimeFormatter.ISO_DATE))
+                        .startDate(LocalDate.parse(ticketCustomerGiveRequest.startDate(), formatter))
+                        .endDate(LocalDate.parse(ticketCustomerGiveRequest.endDate(), formatter))
                         .type(TicketCustomerType.VALID)
                         .paymentMethod(ticketCustomerGiveRequest.paymentMethod())
                         .price(ticketCustomerGiveRequest.price())
                         .paidPrice(ticketCustomerGiveRequest.paidPrice())
                         .description(ticketCustomerGiveRequest.description())
                         .customJson(ticketCustomerGiveRequest.customJson())
-                        .startTime(LocalTime.parse(ticketCustomerGiveRequest.startDate(), DateTimeFormatter.ISO_TIME))
-                        .endTime(LocalTime.parse(ticketCustomerGiveRequest.endDate(), DateTimeFormatter.ISO_TIME))
+                        .startTime(LocalTime.parse(ticketCustomerGiveRequest.startDate(), timeFormatter))
+                        .endTime(LocalTime.parse(ticketCustomerGiveRequest.endDate(), timeFormatter))
                         .validCounts(ticketCustomerGiveRequest.validCounts())
                         .build();
                 this.ticketCustomerRepository.save(ticketCustomer);
@@ -86,16 +88,16 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
                         .customerName(customerFeignResponse.name())
                         .ticketType(TicketType.PT)
                         .ticket(gotTicket)
-                        .startDate(LocalDate.parse(ticketCustomerGiveRequest.startDate(), DateTimeFormatter.ISO_DATE))
-                        .endDate(LocalDate.parse(ticketCustomerGiveRequest.endDate(), DateTimeFormatter.ISO_DATE))
+                        .startDate(LocalDate.parse(ticketCustomerGiveRequest.startDate(), formatter))
+                        .endDate(LocalDate.parse(ticketCustomerGiveRequest.endDate(), formatter))
                         .type(TicketCustomerType.VALID)
                         .paymentMethod(ticketCustomerGiveRequest.paymentMethod())
                         .price(ticketCustomerGiveRequest.price())
                         .paidPrice(ticketCustomerGiveRequest.paidPrice())
                         .description(ticketCustomerGiveRequest.description())
                         .customJson(ticketCustomerGiveRequest.customJson())
-                        .startTime(LocalTime.parse(ticketCustomerGiveRequest.startDate(), DateTimeFormatter.ISO_TIME))
-                        .endTime(LocalTime.parse(ticketCustomerGiveRequest.endDate(), DateTimeFormatter.ISO_TIME))
+                        .startTime(LocalTime.parse(ticketCustomerGiveRequest.startDate(), timeFormatter))
+                        .endTime(LocalTime.parse(ticketCustomerGiveRequest.endDate(), timeFormatter))
                         .validCounts(ticketCustomerGiveRequest.validCounts())
                         .build();
                 this.ticketCustomerRepository.save(ticketCustomer);
