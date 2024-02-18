@@ -8,7 +8,7 @@ import java.util.List;
 
 public record TicketCustomerGetListResponse(
         Long total,
-        List<TicketCustomerGetResponse> ticketCustomerGetResponseList
+        List<TicketCustomerGetResponse> hits
 ) {
     public static TicketCustomerGetListResponse makeDto(Page<TicketCustomer> ticketCustomerPage) {
         List<TicketCustomerGetResponse> ticketCustomerGetResponseList = new ArrayList<>();
