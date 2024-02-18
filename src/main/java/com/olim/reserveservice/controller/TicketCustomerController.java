@@ -2,6 +2,7 @@ package com.olim.reserveservice.controller;
 
 import com.olim.reserveservice.dto.request.TicketCustomerGiveRequest;
 import com.olim.reserveservice.dto.response.TicketCustomerGetListResponse;
+import com.olim.reserveservice.dto.response.TicketCustomerGetResponse;
 import com.olim.reserveservice.service.TicketCustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -56,5 +57,24 @@ public class TicketCustomerController {
     ) {
         return ResponseEntity.ok(this.ticketCustomerService.getListTicketCustomer(UUID.fromString(userId), centerId, page, count, name, sortBy, orderByDesc, type));
     }
-
+    @GetMapping("/list/{customerId}")
+    @Operation(description = "고객의 이용권 목록 가져오기")
+    @Parameters({
+            @Parameter(name = "userId", description = "액세스 토큰 아이디", in = ParameterIn.HEADER),
+            @Parameter(name = "customerId", description = "고객 UUID", in = ParameterIn.PATH, required = true),
+            @Parameter(name = "page", description = "페이지", in = ParameterIn.QUERY, required = false, example = "0"),
+            @Parameter(name = "count", description = "페이지 내 아이템 수", in = ParameterIn.QUERY, required = false, example = "20"),
+            @Parameter(name = "sortBy", description = "정렬 기준", in = ParameterIn.QUERY, example = "title"),
+            @Parameter(name = "orderByDesc", description = "내림차순", in = ParameterIn.QUERY, example = "true")
+    })
+    public ResponseEntity<TicketCustomerGetListResponse> getListTicketCustomerByCustomerId(
+            @RequestHeader("id") String userId,
+            @PathVariable(value = "customerId") String customerId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "count", defaultValue = "50") int count,
+            @RequestParam(value = "sortBy", defaultValue = "cAt") String sortBy,
+            @RequestParam(value = "orderByDesc", defaultValue = "true") Boolean orderByDesc
+    ) {
+        return ResponseEntity.ok(this.ticketCustomerService.getTicketCustomer(UUID.fromString(userId), Long.parseLong(customerId), page, count, sortBy, orderByDesc));
+    }
 }

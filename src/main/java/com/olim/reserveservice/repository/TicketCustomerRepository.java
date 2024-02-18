@@ -10,4 +10,5 @@ import java.util.UUID;
 @Repository
 public interface TicketCustomerRepository extends JpaRepository<TicketCustomer, UUID> {
     Page<TicketCustomer> findAllByCenterIdAndCustomerName(UUID centerId, String customerName, Pageable pageable);
+    Page<TicketCustomer> findAllByCenterIdAndCustomerId(UUID centerId, Long customerId, Pageable pageable);
 }

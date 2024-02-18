@@ -7,6 +7,7 @@ public record CustomerFeignResponse(
     Long userId,
     String name,
     String phoneNumber,
-    UUID owner
+    UUID owner,
+    UUID centerId
 ) {
 }

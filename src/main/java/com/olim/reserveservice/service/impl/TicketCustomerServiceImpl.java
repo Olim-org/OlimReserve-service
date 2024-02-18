@@ -5,6 +5,7 @@ import com.olim.reserveservice.dto.request.TicketCustomerGiveRequest;
 import com.olim.reserveservice.dto.response.CenterFeignResponse;
 import com.olim.reserveservice.dto.response.CustomerFeignResponse;
 import com.olim.reserveservice.dto.response.TicketCustomerGetListResponse;
+import com.olim.reserveservice.dto.response.TicketCustomerGetResponse;
 import com.olim.reserveservice.entity.Ticket;
 import com.olim.reserveservice.entity.TicketCustomer;
 import com.olim.reserveservice.enumeration.TicketCustomerType;
@@ -73,8 +74,8 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
                         .paidPrice(ticketCustomerGiveRequest.paidPrice())
                         .description(ticketCustomerGiveRequest.description())
                         .customJson(ticketCustomerGiveRequest.customJson())
-                        .startTime(LocalTime.parse(ticketCustomerGiveRequest.startDate(), timeFormatter))
-                        .endTime(LocalTime.parse(ticketCustomerGiveRequest.endDate(), timeFormatter))
+                        .startTime(LocalTime.parse(ticketCustomerGiveRequest.startTime(), timeFormatter))
+                        .endTime(LocalTime.parse(ticketCustomerGiveRequest.endTime(), timeFormatter))
                         .validCounts(ticketCustomerGiveRequest.validCounts())
                         .build();
                 this.ticketCustomerRepository.save(ticketCustomer);
@@ -96,8 +97,8 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
                         .paidPrice(ticketCustomerGiveRequest.paidPrice())
                         .description(ticketCustomerGiveRequest.description())
                         .customJson(ticketCustomerGiveRequest.customJson())
-                        .startTime(LocalTime.parse(ticketCustomerGiveRequest.startDate(), timeFormatter))
-                        .endTime(LocalTime.parse(ticketCustomerGiveRequest.endDate(), timeFormatter))
+                        .startTime(LocalTime.parse(ticketCustomerGiveRequest.startTime(), timeFormatter))
+                        .endTime(LocalTime.parse(ticketCustomerGiveRequest.endTime(), timeFormatter))
                         .validCounts(ticketCustomerGiveRequest.validCounts())
                         .build();
                 this.ticketCustomerRepository.save(ticketCustomer);
@@ -123,6 +124,34 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
         Page<TicketCustomer> ticketCustomerPage = this.ticketCustomerRepository.findAllByCenterIdAndCustomerName(UUID.fromString(centerId), name, pageable);
         TicketCustomerGetListResponse ticketCustomerGetListResponse =
                 TicketCustomerGetListResponse.makeDto(ticketCustomerPage);
+        return ticketCustomerGetListResponse;
+    }
+
+    @Override
+    public TicketCustomerGetListResponse getTicketCustomer(UUID userId, Long customerId, int page, int count, String sortBy, Boolean orderByDesc) {
+        CustomerFeignResponse customerFeignResponse = customerClient.getCustomerInfo(userId.toString(), customerId);
+        if (customerFeignResponse == null) {
+            throw new DataNotFoundException("해당 고객을 찾을 수 없습니다.");
+        }
+        if (!customerFeignResponse.owner().equals(userId)) {
+            throw new PermissionFailException("해당 이용권을 조회할 권한이 없습니다.");
+        }
+        CenterFeignResponse centerFeignResponse = customerClient.getCenterInfo(userId.toString(), customerFeignResponse.centerId().toString());
+        if (centerFeignResponse == null) {
+            throw new DataNotFoundException("해당 센터를 찾을 수 없습니다.");
+        }
+        if (!centerFeignResponse.owner().equals(userId)) {
+            throw new PermissionFailException("해당 이용권을 조회할 권한이 없습니다.");
+        }
+
+        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
+        if (!orderByDesc) {
+            sort = Sort.by(Sort.Direction.ASC, sortBy);
+        }
+        Pageable pageable = PageRequest.of(page, count, sort);
+        Page<TicketCustomer> ticketCustomerPage = this.ticketCustomerRepository.findAllByCenterIdAndCustomerId(centerFeignResponse.centerId(), customerId, pageable);
+        TicketCustomerGetListResponse  ticketCustomerGetListResponse = TicketCustomerGetListResponse.makeDto(ticketCustomerPage);
+
         return ticketCustomerGetListResponse;
     }
 }
