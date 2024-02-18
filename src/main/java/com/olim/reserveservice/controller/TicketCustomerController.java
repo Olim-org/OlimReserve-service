@@ -81,7 +81,7 @@ public class TicketCustomerController {
     ) {
         return ResponseEntity.ok(this.ticketCustomerService.getTicketCustomer(UUID.fromString(userId), Long.parseLong(customerId), page, count, sortBy, orderByDesc, type));
     }
-    @PutMapping("/modify/{ticketCustomerId}")
+    @PutMapping("/edit/{ticketCustomerId}")
     @Operation(description = "고객 이용권 수정하기")
     public ResponseEntity<String> modifyTicketCustomer(
             @RequestHeader("id") String userId,
