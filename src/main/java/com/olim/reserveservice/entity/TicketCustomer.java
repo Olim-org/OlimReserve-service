@@ -123,4 +123,7 @@ public class TicketCustomer extends BaseEntity{
         this.description = description;
         this.customJson = customJson;
     }
+    public void deleteTicketCustomer() {
+        this.type = TicketCustomerType.DELETED;
+    }
 }

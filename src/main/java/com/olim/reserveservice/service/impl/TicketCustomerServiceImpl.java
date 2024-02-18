@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -123,7 +124,7 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
             sort = Sort.by(Sort.Direction.ASC, sortBy);
         }
         Pageable pageable = PageRequest.of(page, count, sort);
-        Page<TicketCustomer> ticketCustomerPage = this.ticketCustomerRepository.findAllByCenterIdAndTicketTypeAndCustomerNameContaining(UUID.fromString(centerId), TicketType.valueOf(type), name, pageable);
+        Page<TicketCustomer> ticketCustomerPage = this.ticketCustomerRepository.findAllByCenterIdAndTicketTypeAndCustomerNameContainingAndTypeNotIn(UUID.fromString(centerId), TicketType.valueOf(type), name, List.of(TicketCustomerType.DELETED), pageable);
         TicketCustomerGetListResponse ticketCustomerGetListResponse =
                 TicketCustomerGetListResponse.makeDto(ticketCustomerPage);
         return ticketCustomerGetListResponse;
@@ -152,7 +153,7 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
         }
 
         Pageable pageable = PageRequest.of(page, count, sort);
-        Page<TicketCustomer> ticketCustomerPage = this.ticketCustomerRepository.findAllByCenterIdAndCustomerIdAndTicketType(centerFeignResponse.centerId(), customerId, TicketType.valueOf(type), pageable);
+        Page<TicketCustomer> ticketCustomerPage = this.ticketCustomerRepository.findAllByCenterIdAndCustomerIdAndTicketTypeAndTypeNotIn(centerFeignResponse.centerId(), customerId, TicketType.valueOf(type), List.of(TicketCustomerType.DELETED), pageable);
         TicketCustomerGetListResponse  ticketCustomerGetListResponse = TicketCustomerGetListResponse.makeDto(ticketCustomerPage);
 
         return ticketCustomerGetListResponse;
@@ -246,7 +247,8 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
         if (!ticket.get().getCenterId().equals(gotTicketCustomer.getCenterId())) {
             throw new PermissionFailException("해당 이용권은 해당 센터의 이용권이 아닙니다.");
         }
-        this.ticketCustomerRepository.delete(ticketCustomer.get());
+        gotTicketCustomer.deleteTicketCustomer();
+        this.ticketCustomerRepository.save(gotTicketCustomer);
         return "성공적으로 " + customerFeignResponse.name() +  " 고객으로부터 이용권이 제거 되었습니다.";
     }
 }

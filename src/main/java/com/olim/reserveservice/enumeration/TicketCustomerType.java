@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum TicketCustomerType {
     VALID("VALID"),
     INVALID("INVALID"),
-    REFUND("REFUND");
+    REFUND("REFUND"),
+    DELETED("DELETED");
     private final String key;
 }

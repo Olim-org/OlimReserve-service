@@ -11,12 +11,13 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 @Repository
 public interface TicketCustomerRepository extends JpaRepository<TicketCustomer, UUID> {
-    Page<TicketCustomer> findAllByCenterIdAndTicketTypeAndCustomerNameContaining(UUID centerId, TicketType ticketType, String customerName, Pageable pageable);
-    Page<TicketCustomer> findAllByCenterIdAndCustomerIdAndTicketType(UUID centerId, Long customerId, TicketType ticketType, Pageable pageable);
+    Page<TicketCustomer> findAllByCenterIdAndTicketTypeAndCustomerNameContainingAndTypeNotIn(UUID centerId, TicketType ticketType, String customerName, List<TicketCustomerType> type, Pageable pageable);
+    Page<TicketCustomer> findAllByCenterIdAndCustomerIdAndTicketTypeAndTypeNotIn(UUID centerId, Long customerId, TicketType ticketType, List<TicketCustomerType> type, Pageable pageable);
     Optional<TicketCustomer> findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsGreaterThanOrderByStartDateDesc(
             UUID centerId,
             Long customerId,
