@@ -130,7 +130,7 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
     }
 
     @Override
-    public TicketCustomerGetListResponse getTicketCustomer(UUID userId, Long customerId, int page, int count, String sortBy, Boolean orderByDesc) {
+    public TicketCustomerGetListResponse getTicketCustomer(UUID userId, Long customerId, int page, int count, String sortBy, Boolean orderByDesc, String type) {
         CustomerFeignResponse customerFeignResponse = customerClient.getCustomerInfo(userId.toString(), customerId);
         if (customerFeignResponse == null) {
             throw new DataNotFoundException("해당 고객을 찾을 수 없습니다.");
@@ -150,8 +150,9 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
         if (!orderByDesc) {
             sort = Sort.by(Sort.Direction.ASC, sortBy);
         }
+
         Pageable pageable = PageRequest.of(page, count, sort);
-        Page<TicketCustomer> ticketCustomerPage = this.ticketCustomerRepository.findAllByCenterIdAndCustomerId(centerFeignResponse.centerId(), customerId, pageable);
+        Page<TicketCustomer> ticketCustomerPage = this.ticketCustomerRepository.findAllByCenterIdAndCustomerIdAndTicketType(centerFeignResponse.centerId(), customerId, TicketType.valueOf(type), pageable);
         TicketCustomerGetListResponse  ticketCustomerGetListResponse = TicketCustomerGetListResponse.makeDto(ticketCustomerPage);
 
         return ticketCustomerGetListResponse;

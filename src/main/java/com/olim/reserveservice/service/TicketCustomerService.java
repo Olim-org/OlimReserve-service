@@ -13,7 +13,7 @@ public interface TicketCustomerService {
     @Transactional
     TicketCustomerGetListResponse getListTicketCustomer(UUID userId, String centerId, int page, int count, String name, String sortBy, Boolean orderByDesc, String type);
     @Transactional
-    TicketCustomerGetListResponse getTicketCustomer(UUID userId, Long customerId, int page, int count, String sortBy, Boolean orderByDesc);
+    TicketCustomerGetListResponse getTicketCustomer(UUID userId, Long customerId, int page, int count, String sortBy, Boolean orderByDesc, String type);
     @Transactional
     String modifyTicketCustomer(UUID userId, UUID ticketCustomerId, TicketCustomerPutRequest ticketCustomerPutRequest);
     @Transactional

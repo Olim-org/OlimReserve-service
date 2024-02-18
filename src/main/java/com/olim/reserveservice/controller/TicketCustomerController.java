@@ -67,7 +67,8 @@ public class TicketCustomerController {
             @Parameter(name = "page", description = "페이지", in = ParameterIn.QUERY, required = false, example = "0"),
             @Parameter(name = "count", description = "페이지 내 아이템 수", in = ParameterIn.QUERY, required = false, example = "20"),
             @Parameter(name = "sortBy", description = "정렬 기준", in = ParameterIn.QUERY, example = "title"),
-            @Parameter(name = "orderByDesc", description = "내림차순", in = ParameterIn.QUERY, example = "true")
+            @Parameter(name = "orderByDesc", description = "내림차순", in = ParameterIn.QUERY, example = "true"),
+            @Parameter(name = "type", description = "이용권 타입", in = ParameterIn.QUERY, example = "GYM")
     })
     public ResponseEntity<TicketCustomerGetListResponse> getListTicketCustomerByCustomerId(
             @RequestHeader("id") String userId,
@@ -75,9 +76,10 @@ public class TicketCustomerController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "count", defaultValue = "50") int count,
             @RequestParam(value = "sortBy", defaultValue = "cAt") String sortBy,
-            @RequestParam(value = "orderByDesc", defaultValue = "true") Boolean orderByDesc
+            @RequestParam(value = "orderByDesc", defaultValue = "true") Boolean orderByDesc,
+            @RequestParam(value = "type", defaultValue = "GYM") String type
     ) {
-        return ResponseEntity.ok(this.ticketCustomerService.getTicketCustomer(UUID.fromString(userId), Long.parseLong(customerId), page, count, sortBy, orderByDesc));
+        return ResponseEntity.ok(this.ticketCustomerService.getTicketCustomer(UUID.fromString(userId), Long.parseLong(customerId), page, count, sortBy, orderByDesc, type));
     }
     @PutMapping("/modify/{ticketCustomerId}")
     @Operation(description = "고객 이용권 수정하기")
