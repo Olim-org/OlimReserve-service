@@ -69,9 +69,6 @@ public class AttendServiceImpl implements AttendService {
             throw new DataNotFoundException("해당 고객의 유효한 이용권을 찾을 수 없습니다.");
         }
         TicketCustomer gotTicektCustomer = ticketCustomer.get();
-        if (gotTicektCustomer.getValidCounts() <= 0) {
-            throw new DataNotFoundException("해당 고객의 유효한 이용권이 없습니다.");
-        }
         Attend attend = Attend.builder()
                         .centerId(attendCheckRequest.centerId())
                         .customerId(attendCheckRequest.customerId())
