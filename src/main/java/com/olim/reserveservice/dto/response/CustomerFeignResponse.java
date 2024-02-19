@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public record CustomerFeignResponse(
     Long id,
-    Long userId,
+    UUID userId,
     String name,
     String phoneNumber,
     UUID owner,
