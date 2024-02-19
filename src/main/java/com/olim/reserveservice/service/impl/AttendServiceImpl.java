@@ -123,7 +123,7 @@ public class AttendServiceImpl implements AttendService {
             if (attendCheck.isPresent()) {
                 throw new DuplicateException("오늘은 이미 출석체크 되었습니다.");
             }
-            Optional<TicketCustomer> ticketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsGreaterThanOrderByStartDateDesc(
+            Optional<TicketCustomer> infiniteTicketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsIsOrderByStartDateDesc(
                     attendByPhoneRequest.centerId(),
                     customerFeignResponse.hits().get(0).id(),
                     TicketCustomerType.VALID,
@@ -132,25 +132,49 @@ public class AttendServiceImpl implements AttendService {
                     LocalDate.now(),
                     LocalTime.now(),
                     LocalTime.now(),
-                    0
+                    null
             );
-            if (!ticketCustomer.isPresent()) {
-                throw new DataNotFoundException("해당 고객의 유효한 이용권을 찾을 수 없습니다.");
-            }
-            TicketCustomer gotTicektCustomer = ticketCustomer.get();
+            if (infiniteTicketCustomer.isPresent()) {
+                TicketCustomer gotTicektCustomer = infiniteTicketCustomer.get();
 
-            if (gotTicektCustomer.getValidCounts() != null) {
-                gotTicektCustomer.updateValidCounts(gotTicektCustomer.getValidCounts() - 1);
-                this.ticketCustomerRepository.save(gotTicektCustomer);
+                Attend attend = Attend.builder()
+                        .centerId(attendByPhoneRequest.centerId())
+                        .customerId(customerFeignResponse.hits().get(0).id())
+                        .customerName(customerFeignResponse.hits().get(0).name())
+                        .ticketCustomer(gotTicektCustomer)
+                        .attendTime(LocalDateTime.now())
+                        .build();
+                this.attendRepository.save(attend);
+            } else {
+                Optional<TicketCustomer> ticketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsGreaterThanOrderByStartDateDesc(
+                        attendByPhoneRequest.centerId(),
+                        customerFeignResponse.hits().get(0).id(),
+                        TicketCustomerType.VALID,
+                        TicketType.GYM,
+                        LocalDate.now(),
+                        LocalDate.now(),
+                        LocalTime.now(),
+                        LocalTime.now(),
+                        0
+                );
+                if (!ticketCustomer.isPresent()) {
+                    throw new DataNotFoundException("해당 고객의 유효한 이용권을 찾을 수 없습니다.");
+                }
+                TicketCustomer gotTicektCustomer = ticketCustomer.get();
+
+                if (gotTicektCustomer.getValidCounts() != null) {
+                    gotTicektCustomer.updateValidCounts(gotTicektCustomer.getValidCounts() - 1);
+                    this.ticketCustomerRepository.save(gotTicektCustomer);
+                }
+                Attend attend = Attend.builder()
+                        .centerId(attendByPhoneRequest.centerId())
+                        .customerId(customerFeignResponse.hits().get(0).id())
+                        .customerName(customerFeignResponse.hits().get(0).name())
+                        .ticketCustomer(gotTicektCustomer)
+                        .attendTime(LocalDateTime.now())
+                        .build();
+                this.attendRepository.save(attend);
             }
-            Attend attend = Attend.builder()
-                    .centerId(attendByPhoneRequest.centerId())
-                    .customerId(customerFeignResponse.hits().get(0).id())
-                    .customerName(customerFeignResponse.hits().get(0).name())
-                    .ticketCustomer(gotTicektCustomer)
-                    .attendTime(LocalDateTime.now())
-                    .build();
-            this.attendRepository.save(attend);
         }
             return new ResponseEntity<>(customerFeignResponse, HttpStatus.OK);
     }
