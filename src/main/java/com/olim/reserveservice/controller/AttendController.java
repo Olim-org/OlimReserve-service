@@ -46,11 +46,11 @@ private final AttendService attendService;
     @Parameters({
             @Parameter(name = "userId", description = "액세스 토큰 아이디", in = ParameterIn.HEADER)
     })
-    public ResponseEntity<String> checkAttend(
+    public ResponseEntity<?> checkAttend(
             @RequestHeader("id") String userId,
             @RequestBody AttendByPhoneRequest attendByPhoneRequest
     ) {
-        return new ResponseEntity<>(this.attendService.attend(UUID.fromString(userId), attendByPhoneRequest), HttpStatus.OK);
+        return this.attendService.attend(UUID.fromString(userId), attendByPhoneRequest);
     }
     @GetMapping("/list")
     @Operation(description = "출석 목록 조회")
