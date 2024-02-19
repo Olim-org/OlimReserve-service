@@ -228,7 +228,7 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
         this.ticketCustomerRepository.save(gotTicketCustomer);
         return "성공적으로 " + customerFeignResponse.name() +  " 고객의 이용권이 수정 되었습니다.";
     }
-
+    @Transactional
     @Override
     public String deleteTicketCustomer(UUID userId, UUID ticketCustomerId) {
         Optional<TicketCustomer> ticketCustomer = this.ticketCustomerRepository.findById(ticketCustomerId);

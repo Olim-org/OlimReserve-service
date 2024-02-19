@@ -6,6 +6,7 @@ import com.olim.reserveservice.enumeration.TicketType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 import java.util.UUID;
@@ -15,7 +16,7 @@ public record TicketCustomerPutRequest(
         @NotBlank
         UUID ticketId,
         @Schema(description = "티켓 타입", example = "GYM")
-        @NotBlank
+        @NotNull
         TicketType ticketType,
         @Schema(description = "고객 UID", example = "5")
         @NotBlank
@@ -39,6 +40,7 @@ public record TicketCustomerPutRequest(
         @Schema(description = "티켓 유효 횟수", example = "10")
         Integer validCounts,
         @Schema(description = "결제 방식", example = "CASH")
+        @NotNull
         PaymentMethod paymentMethod,
         @Schema(description = "티켓 가격", example = "10000")
         @Pattern(regexp = "^\\d+$", message = "숫자만 입력해주세요.")
@@ -49,7 +51,7 @@ public record TicketCustomerPutRequest(
         @Pattern(regexp = "^\\d+$", message = "숫자만 입력해주세요.")
         String paidPrice,
         @Schema(description = "티켓 고객 타입", example = "VALID")
-        @NotBlank
+        @NotNull
         TicketCustomerType type,
         @Schema(description = "티켓 설명", example = "테스트 티켓 설명")
         String description,

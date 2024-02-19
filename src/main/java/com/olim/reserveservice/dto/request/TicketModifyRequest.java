@@ -4,6 +4,7 @@ import com.olim.reserveservice.enumeration.TicketStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 import java.util.Map;
@@ -34,6 +35,7 @@ public record TicketModifyRequest(
         @Pattern(regexp = "^\\d{2}:\\d{2}$", message = "시간 형식이 올바르지 않습니다.")
         String endTime,
         @Schema(description = "티켓 상태", example = "SELL")
+        @NotNull
         TicketStatus ticketStatus,
         String customJson
 ) {

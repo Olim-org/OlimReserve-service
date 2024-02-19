@@ -4,6 +4,7 @@ import com.olim.reserveservice.enumeration.TicketType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 import java.util.Map;
@@ -28,7 +29,7 @@ public record TicketCreateRequest(
         @Nullable
         String sale,
         @Schema(description = "티켓 타입", example = "GYM")
-        @NotBlank
+        @NotNull
         TicketType type,
         @Schema(description = "티켓 적용 일수", example = "30")
         Integer applyDays,
