@@ -8,9 +8,11 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface AttendRepository extends JpaRepository<Attend, UUID> {
     Page<Attend> findAllByCenterIdAndAttendTimeAfterAndAttendTimeBeforeAndCustomerNameContaining(UUID centerId, LocalDateTime time1, LocalDateTime time2, String customerName, Pageable pageable);
+    Optional<Attend> findTop1ByCenterIdAndCustomerIdAndAttendTimeBeforeAndAttendTimeAfterOrderByAttendTimeDesc(UUID centerId, Long customerId, LocalDateTime time1, LocalDateTime time2);
 }

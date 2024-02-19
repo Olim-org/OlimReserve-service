@@ -2,6 +2,7 @@ package com.olim.reserveservice.service.impl;
 
 import com.olim.reserveservice.client.CustomerClient;
 import com.olim.reserveservice.client.UserClient;
+import com.olim.reserveservice.dto.request.AttendByPhoneRequest;
 import com.olim.reserveservice.dto.request.AttendCheckRequest;
 import com.olim.reserveservice.dto.response.AttendGetListResponse;
 import com.olim.reserveservice.dto.response.CenterFeignResponse;
@@ -12,6 +13,7 @@ import com.olim.reserveservice.entity.TicketCustomer;
 import com.olim.reserveservice.enumeration.TicketCustomerType;
 import com.olim.reserveservice.enumeration.TicketType;
 import com.olim.reserveservice.exception.customexception.DataNotFoundException;
+import com.olim.reserveservice.exception.customexception.DuplicateException;
 import com.olim.reserveservice.exception.customexception.PermissionFailException;
 import com.olim.reserveservice.repository.AttendRepository;
 import com.olim.reserveservice.repository.TicketCustomerRepository;
@@ -55,6 +57,15 @@ public class AttendServiceImpl implements AttendService {
         if (customerFeignResponse == null) {
             throw new DataNotFoundException("해당 고객을 찾을 수 없습니다.");
         }
+        Optional<Attend> attendCheck = attendRepository.findTop1ByCenterIdAndCustomerIdAndAttendTimeBeforeAndAttendTimeAfterOrderByAttendTimeDesc(
+                attendCheckRequest.centerId(),
+                customerFeignResponse.id(),
+                LocalDateTime.of(LocalDate.now(), LocalTime.MAX),
+                LocalDateTime.of(LocalDate.now(), LocalTime.MIN)
+        );
+        if (attendCheck.isPresent()) {
+            throw new DuplicateException("오늘은 이미 출석체크 되었습니다.");
+        }
         Optional<TicketCustomer> ticketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsGreaterThanOrderByStartDateDesc(
                 attendCheckRequest.centerId(),
                 attendCheckRequest.customerId(),
@@ -84,6 +95,60 @@ public class AttendServiceImpl implements AttendService {
                 .build();
         this.attendRepository.save(attend);
         return "출석체크 완료";
+    }
+    @Transactional
+    @Override
+    public String attend(UUID userId, AttendByPhoneRequest attendByPhoneRequest) {
+        CenterFeignResponse centerFeignResponse = customerClient.getCenterInfo(userId.toString(), attendByPhoneRequest.centerId().toString());
+        if (centerFeignResponse == null) {
+            throw new DataNotFoundException("해당 센터를 찾을 수 없습니다.");
+        }
+        if (!centerFeignResponse.owner().equals(userId)) {
+            throw new PermissionFailException("출석 체크할 권한이 없습니다.");
+        }
+        CustomerFeignResponse customerFeignResponse = customerClient.getCustomerInfo(userId.toString(), attendByPhoneRequest.phoneNumber(), attendByPhoneRequest.centerId().toString());
+        if (customerFeignResponse == null) {
+            throw new DataNotFoundException("해당 고객을 찾을 수 없습니다.");
+        }
+        Optional<Attend> attendCheck = attendRepository.findTop1ByCenterIdAndCustomerIdAndAttendTimeBeforeAndAttendTimeAfterOrderByAttendTimeDesc(
+                attendByPhoneRequest.centerId(),
+                customerFeignResponse.id(),
+                LocalDateTime.of(LocalDate.now(), LocalTime.MAX),
+                LocalDateTime.of(LocalDate.now(), LocalTime.MIN)
+        );
+        if (attendCheck.isPresent()) {
+            throw new DuplicateException("오늘은 이미 출석체크 되었습니다.");
+        }
+        Optional<TicketCustomer> ticketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsGreaterThanOrderByStartDateDesc(
+                attendByPhoneRequest.centerId(),
+                customerFeignResponse.id(),
+                TicketCustomerType.VALID,
+                TicketType.GYM,
+                LocalDate.now(),
+                LocalDate.now(),
+                LocalTime.now(),
+                LocalTime.now(),
+                0
+        );
+        if (!ticketCustomer.isPresent()) {
+            throw new DataNotFoundException("해당 고객의 유효한 이용권을 찾을 수 없습니다.");
+        }
+        TicketCustomer gotTicektCustomer = ticketCustomer.get();
+
+        if (gotTicektCustomer.getValidCounts() != null) {
+            gotTicektCustomer.updateValidCounts(gotTicektCustomer.getValidCounts() - 1);
+            this.ticketCustomerRepository.save(gotTicektCustomer);
+        }
+        Attend attend = Attend.builder()
+                .centerId(attendByPhoneRequest.centerId())
+                .customerId(customerFeignResponse.id())
+                .customerName(customerFeignResponse.name())
+                .ticketCustomer(gotTicektCustomer)
+                .attendTime(LocalDateTime.now())
+                .build();
+        this.attendRepository.save(attend);
+        return "출석체크 완료";
+
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.olim.reserveservice.controller;
 
 import com.olim.reserveservice.client.CustomerClient;
 import com.olim.reserveservice.client.UserClient;
+import com.olim.reserveservice.dto.request.AttendByPhoneRequest;
 import com.olim.reserveservice.dto.request.AttendCheckRequest;
 import com.olim.reserveservice.dto.response.AttendGetListResponse;
 import com.olim.reserveservice.service.AttendService;
@@ -39,6 +40,17 @@ private final AttendService attendService;
             @RequestBody AttendCheckRequest attendCheckRequest
     ) {
         return new ResponseEntity<>(this.attendService.attend(UUID.fromString(userId), attendCheckRequest), HttpStatus.OK);
+    }
+    @PostMapping("/check")
+    @Operation(description = "출석 체크")
+    @Parameters({
+            @Parameter(name = "userId", description = "액세스 토큰 아이디", in = ParameterIn.HEADER)
+    })
+    public ResponseEntity<String> checkAttend(
+            @RequestHeader("id") String userId,
+            @RequestBody AttendByPhoneRequest attendByPhoneRequest
+    ) {
+        return new ResponseEntity<>(this.attendService.attend(UUID.fromString(userId), attendByPhoneRequest), HttpStatus.OK);
     }
     @GetMapping("/list")
     @Operation(description = "출석 목록 조회")

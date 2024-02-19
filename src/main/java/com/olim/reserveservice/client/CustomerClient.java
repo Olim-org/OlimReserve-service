@@ -14,4 +14,6 @@ public interface CustomerClient {
     CenterFeignResponse getCenterInfo(@RequestHeader("id") String userId, @RequestParam(value = "centerId") String centerId);
     @GetMapping("/customer/info")
     CustomerFeignResponse getCustomerInfo(@RequestHeader("id") String userId, @RequestParam(value = "customerId") Long customerId);
+    @GetMapping("/customer/info")
+    CustomerFeignResponse getCustomerInfo(@RequestHeader("id") String userId, @RequestParam(value = "phoneNumber") String phoneNumber, @RequestParam(value = "centerId") String centerId);
 }
