@@ -69,34 +69,58 @@ public class AttendServiceImpl implements AttendService {
         if (attendCheck.isPresent()) {
             throw new DuplicateException("오늘은 이미 출석체크 되었습니다.");
         }
-        Optional<TicketCustomer> ticketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsGreaterThanOrderByStartDateDesc(
+        Optional<TicketCustomer> infiniteTicketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsLessThanOrderByStartDateDesc(
                 attendCheckRequest.centerId(),
-                attendCheckRequest.customerId(),
+                customerFeignResponse.id(),
                 TicketCustomerType.VALID,
                 TicketType.GYM,
                 LocalDate.now().plusDays(1),
                 LocalDate.now().minusDays(1),
                 LocalTime.now().plusMinutes(1),
                 LocalTime.now().minusMinutes(1),
-                0
+                -5
         );
-        if (!ticketCustomer.isPresent()) {
-            throw new DataNotFoundException("해당 고객의 유효한 이용권을 찾을 수 없습니다.");
-        }
-        TicketCustomer gotTicektCustomer = ticketCustomer.get();
+        if (infiniteTicketCustomer.isPresent()) {
+            TicketCustomer gotTicektCustomer = infiniteTicketCustomer.get();
 
-        if (gotTicektCustomer.getValidCounts() != null) {
-            gotTicektCustomer.updateValidCounts(gotTicektCustomer.getValidCounts() - 1);
-            this.ticketCustomerRepository.save(gotTicektCustomer);
+            Attend attend = Attend.builder()
+                    .centerId(attendCheckRequest.centerId())
+                    .customerId(customerFeignResponse.id())
+                    .customerName(customerFeignResponse.name())
+                    .ticketCustomer(gotTicektCustomer)
+                    .attendTime(LocalDateTime.now())
+                    .build();
+            this.attendRepository.save(attend);
+        } else {
+            Optional<TicketCustomer> ticketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsGreaterThanOrderByStartDateDesc(
+                    attendCheckRequest.centerId(),
+                    customerFeignResponse.id(),
+                    TicketCustomerType.VALID,
+                    TicketType.GYM,
+                    LocalDate.now().plusDays(1),
+                    LocalDate.now().minusDays(1),
+                    LocalTime.now().plusMinutes(1),
+                    LocalTime.now().minusMinutes(1),
+                    0
+            );
+            if (!ticketCustomer.isPresent()) {
+                throw new DataNotFoundException("해당 고객의 유효한 이용권을 찾을 수 없습니다.");
+            }
+            TicketCustomer gotTicektCustomer = ticketCustomer.get();
+
+            if (gotTicektCustomer.getValidCounts() != null) {
+                gotTicektCustomer.updateValidCounts(gotTicektCustomer.getValidCounts() - 1);
+                this.ticketCustomerRepository.save(gotTicektCustomer);
+            }
+            Attend attend = Attend.builder()
+                    .centerId(attendCheckRequest.centerId())
+                    .customerId(customerFeignResponse.id())
+                    .customerName(customerFeignResponse.name())
+                    .ticketCustomer(gotTicektCustomer)
+                    .attendTime(LocalDateTime.now())
+                    .build();
+            this.attendRepository.save(attend);
         }
-        Attend attend = Attend.builder()
-                .centerId(attendCheckRequest.centerId())
-                .customerId(attendCheckRequest.customerId())
-                .customerName(customerFeignResponse.name())
-                .ticketCustomer(gotTicektCustomer)
-                .attendTime(LocalDateTime.now())
-                .build();
-        this.attendRepository.save(attend);
         return "출석체크 완료";
     }
     @Transactional
