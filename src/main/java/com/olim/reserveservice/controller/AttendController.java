@@ -41,8 +41,8 @@ private final AttendService attendService;
     ) {
         return new ResponseEntity<>(this.attendService.attend(UUID.fromString(userId), attendCheckRequest), HttpStatus.OK);
     }
-    @PostMapping("/check")
-    @Operation(description = "출석 체크")
+    @PostMapping("/pcheck")
+    @Operation(description = "휴대폰 출석 체크")
     @Parameters({
             @Parameter(name = "userId", description = "액세스 토큰 아이디", in = ParameterIn.HEADER)
     })
