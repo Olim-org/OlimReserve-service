@@ -92,7 +92,7 @@ public class AttendServiceImpl implements AttendService {
                     .build();
             this.attendRepository.save(attend);
         } else {
-            Optional<TicketCustomer> ticketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsGreaterThanOrderByStartDateDesc(
+            Optional<TicketCustomer> ticketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartTimeGreaterThanEndTime(
                     attendCheckRequest.centerId(),
                     customerFeignResponse.id(),
                     TicketCustomerType.VALID,
@@ -170,7 +170,7 @@ public class AttendServiceImpl implements AttendService {
                         .build();
                 this.attendRepository.save(attend);
             } else {
-                Optional<TicketCustomer> ticketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsGreaterThanOrderByStartDateDesc(
+                Optional<TicketCustomer> ticketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartTimeGreaterThanEndTime(
                         attendByPhoneRequest.centerId(),
                         customerFeignResponse.hits().get(0).id(),
                         TicketCustomerType.VALID,
