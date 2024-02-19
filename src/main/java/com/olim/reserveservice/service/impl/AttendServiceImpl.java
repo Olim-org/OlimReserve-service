@@ -74,10 +74,10 @@ public class AttendServiceImpl implements AttendService {
                 attendCheckRequest.customerId(),
                 TicketCustomerType.VALID,
                 TicketType.GYM,
-                LocalDate.now(),
-                LocalDate.now(),
-                LocalTime.now(),
-                LocalTime.now(),
+                LocalDate.now().plusDays(1),
+                LocalDate.now().minusDays(1),
+                LocalTime.now().plusMinutes(1),
+                LocalTime.now().minusMinutes(1),
                 0
         );
         if (!ticketCustomer.isPresent()) {
@@ -123,16 +123,16 @@ public class AttendServiceImpl implements AttendService {
             if (attendCheck.isPresent()) {
                 throw new DuplicateException("오늘은 이미 출석체크 되었습니다.");
             }
-            Optional<TicketCustomer> infiniteTicketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsIsOrderByStartDateDesc(
+            Optional<TicketCustomer> infiniteTicketCustomer = this.ticketCustomerRepository.findTop1ByCenterIdAndCustomerIdAndTypeAndTicketTypeAndStartDateBeforeAndEndDateAfterAndStartTimeBeforeAndEndTimeAfterAndValidCountsLessThanOrderByStartDateDesc(
                     attendByPhoneRequest.centerId(),
                     customerFeignResponse.hits().get(0).id(),
                     TicketCustomerType.VALID,
                     TicketType.GYM,
-                    LocalDate.now(),
-                    LocalDate.now(),
-                    LocalTime.now(),
-                    LocalTime.now(),
-                    null
+                    LocalDate.now().plusDays(1),
+                    LocalDate.now().minusDays(1),
+                    LocalTime.now().plusMinutes(1),
+                    LocalTime.now().minusMinutes(1),
+                    -5
             );
             if (infiniteTicketCustomer.isPresent()) {
                 TicketCustomer gotTicektCustomer = infiniteTicketCustomer.get();
@@ -151,10 +151,10 @@ public class AttendServiceImpl implements AttendService {
                         customerFeignResponse.hits().get(0).id(),
                         TicketCustomerType.VALID,
                         TicketType.GYM,
-                        LocalDate.now(),
-                        LocalDate.now(),
-                        LocalTime.now(),
-                        LocalTime.now(),
+                        LocalDate.now().plusDays(1),
+                        LocalDate.now().minusDays(1),
+                        LocalTime.now().plusMinutes(1),
+                        LocalTime.now().minusMinutes(1),
                         0
                 );
                 if (!ticketCustomer.isPresent()) {

@@ -79,7 +79,7 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
                         .customJson(ticketCustomerGiveRequest.customJson())
                         .startTime(LocalTime.parse(ticketCustomerGiveRequest.startTime(), timeFormatter))
                         .endTime(LocalTime.parse(ticketCustomerGiveRequest.endTime(), timeFormatter))
-                        .validCounts(ticketCustomerGiveRequest.validCounts())
+                        .validCounts(-10)
                         .build();
                 this.ticketCustomerRepository.save(ticketCustomer);
                 break;
