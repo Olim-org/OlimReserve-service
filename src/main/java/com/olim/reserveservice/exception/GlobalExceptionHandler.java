@@ -3,6 +3,7 @@ package com.olim.reserveservice.exception;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.olim.reserveservice.exception.customexception.*;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -217,6 +218,26 @@ public class GlobalExceptionHandler {
         final ErrorResponse response = ErrorResponse.of(ErrorCode.FORBIDDEN_ERROR, ex.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN); // 401 Unauthorized
+    }
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<Object> handleFeignException(FeignException ex) {
+        FeignErrorException feignErrorException = new FeignErrorException(
+                ex.status(),
+                "G998",
+                null,
+                null,
+                ex.getMessage());
+        return new ResponseEntity<>(feignErrorException, HttpStatus.valueOf(ex.status()));
+    }
+    @ExceptionHandler(FeignException.FeignClientException.class)
+    public ResponseEntity<Object> handleFeignClientException(FeignException.FeignClientException ex) {
+        FeignErrorException feignErrorException = new FeignErrorException(
+                ex.status(),
+                "G998",
+                null,
+                null,
+                ex.getMessage());
+        return new ResponseEntity<>(feignErrorException, HttpStatus.valueOf(ex.status()));
     }
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<Object> handleCustomException(CustomException ex) {
