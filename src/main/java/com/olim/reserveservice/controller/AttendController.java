@@ -61,7 +61,7 @@ private final AttendService attendService;
             @Parameter(name = "count", description = "페이지 내 아이템 수", in = ParameterIn.QUERY, required = false, example = "20"),
             @Parameter(name = "sortBy", description = "정렬 기준", in = ParameterIn.QUERY, example = "cAt"),
             @Parameter(name = "date", description = "날짜", in = ParameterIn.QUERY, example = "2021-01-01"),
-            @Parameter(name = "keyword", description = "검색어", in = ParameterIn.QUERY, example = "헬스장"),
+            @Parameter(name = "keyword", description = "이름 검색어", in = ParameterIn.QUERY, example = "홍길동"),
             @Parameter(name = "orderByDesc", description = "내림차순", in = ParameterIn.QUERY, example = "true")
     })
     public ResponseEntity<AttendGetListResponse> getAttendList(
