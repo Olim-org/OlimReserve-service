@@ -37,6 +37,10 @@ public record TicketModifyRequest(
         @Schema(description = "티켓 상태", example = "SELL")
         @NotNull
         TicketStatus ticketStatus,
+        @Schema(description = "티켓 색상", example = "#FFFFFF")
+        @NotBlank
+        String hexColor,
+        @Schema(description = "티켓 커스텀 JSON", example = "{'key': 'value'}")
         String customJson
 ) {
 }

@@ -41,6 +41,9 @@ public record TicketCreateRequest(
         @Schema(description = "티켓 종료 시간", example = "18:00")
         @Pattern(regexp = "^\\d{2}:\\d{2}$", message = "시간 형식이 올바르지 않습니다.")
         String endTime,
+        @Schema(description = "티켓 색상", example = "#ffffff")
+        @NotBlank
+        String hexColor,
         String customJson
 ) {
 }

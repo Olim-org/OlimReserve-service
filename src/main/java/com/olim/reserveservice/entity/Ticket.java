@@ -44,6 +44,7 @@ public class Ticket extends BaseEntity {
     private LocalTime endTime;  // 사용 가능 시간
     @Enumerated(value = EnumType.STRING)
     private TicketStatus status;
+    private String hexColor;
     @Column(columnDefinition = "longtext")
     private String customJson;
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
@@ -60,6 +61,8 @@ public class Ticket extends BaseEntity {
             LocalTime startTime,
             LocalTime endTime,
             TicketType type,
+            TicketStatus status,
+            String hexColor,
             String customJson
     ) {
         this.centerId = centerId;
@@ -73,6 +76,8 @@ public class Ticket extends BaseEntity {
         this.validCounts = validCounts;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.status = status;
+        this.hexColor = hexColor;
         this.customJson = customJson;
         this.ticketCustomers = new ArrayList<>();
     }
@@ -85,6 +90,7 @@ public class Ticket extends BaseEntity {
             Integer validCounts,
             LocalTime startTime,
             LocalTime endTime,
+            String hexColor,
             String customJson,
             TicketStatus ticketStatus
     ) {
@@ -96,6 +102,7 @@ public class Ticket extends BaseEntity {
         this.applyDays = applyDays;
         this.validCounts = validCounts;
         this.startTime = startTime;
+        this.hexColor = hexColor;
         this.customJson = customJson;
         this.endTime = endTime;
     }
