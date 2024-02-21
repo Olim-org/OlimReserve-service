@@ -34,6 +34,9 @@ public record TicketGetResponse(
         String endTime,
         @Schema(description = "티켓 상태", example = "SELL")
         TicketStatus status,
+        @Schema(description = "티켓 색상", example = "#FFFFFF")
+        String hexColor,
+        @Schema(description = "티켓 커스텀 JSON", example = "{'key': 'value'}")
         String customJson
 ) {
     public static TicketGetResponse makeDto(Ticket ticket) {
@@ -50,6 +53,7 @@ public record TicketGetResponse(
                 ticket.getStartTime().format(DateTimeFormatter.ISO_TIME),
                 ticket.getEndTime().format(DateTimeFormatter.ISO_TIME),
                 ticket.getStatus(),
+                ticket.getHexColor(),
                 ticket.getCustomJson()
         );
         return response;
