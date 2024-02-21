@@ -28,7 +28,12 @@ public class Attend extends BaseEntity {
     @JoinColumn(name = "TICKET_CUSTOMER_ID")
     @ToString.Exclude
     @JsonIgnore
-    private TicketCustomer ticketCustomer; // 사용된 티켓
+    private TicketCustomer ticketCustomer; // 사용된 티켓-고객
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TICKET_ID")
+    @ToString.Exclude
+    @JsonIgnore
+    private Ticket ticket; // 사용된 티켓
     @Enumerated(value = EnumType.STRING)
     private BlackConsumer blackConsumer;
     @Builder
@@ -37,6 +42,7 @@ public class Attend extends BaseEntity {
             String customerName,
             UUID centerId,
             TicketCustomer ticketCustomer,
+            Ticket ticket,
             LocalDateTime attendTime,
             BlackConsumer blackConsumer,
             LocalTime timeGraph
@@ -45,6 +51,7 @@ public class Attend extends BaseEntity {
         this.customerName = customerName;
         this.centerId = centerId;
         this.ticketCustomer = ticketCustomer;
+        this.ticket = ticket;
         this.attendTime = attendTime;
         this.blackConsumer = blackConsumer;
         this.timeGraph = timeGraph;
