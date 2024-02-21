@@ -11,7 +11,7 @@ public interface TicketService {
     @Transactional
     String createGymTicket(UUID userId, TicketCreateRequest ticketCreateRequest);
     @Transactional
-    TicketGetListResonse getTicketList(UUID userId, UUID centerId, int page, int count, String sortBy, String keyword, Boolean orderByDesc, String type);
+    TicketGetListResonse getTicketList(UUID userId, UUID centerId, int page, int count, String sortBy, String keyword, Boolean orderByDesc, String type, String status);
     @Transactional
     String updateTicket(UUID userId, UUID ticketId, TicketModifyRequest ticketModifyRequest);
     @Transactional

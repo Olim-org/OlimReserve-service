@@ -13,4 +13,5 @@ import java.util.UUID;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, UUID> {
     Page<Ticket> findAllByCenterIdAndTypeAndStatusIsNotAndTitleContaining(UUID centerId, TicketType type, TicketStatus status, String title, Pageable pageable);
+    Page<Ticket> findAllByCenterIdAndTypeAndStatusAndTitleContaining(UUID centerId, TicketType type, TicketStatus status, String title, Pageable pageable);
 }

@@ -56,9 +56,10 @@ public class TicketController {
             @RequestParam(value = "sortBy", defaultValue = "title") String sortBy,
             @RequestParam(value = "keyword", defaultValue = "") String keyword,
             @RequestParam(value = "orderByDesc", defaultValue = "true") Boolean orderByDesc,
-            @RequestParam(value = "type", defaultValue = "GYM") String type
+            @RequestParam(value = "type", defaultValue = "GYM") String type,
+            @RequestParam(value = "status", defaultValue = "") String status
     ) {
-        return new ResponseEntity<>(this.ticketService.getTicketList(UUID.fromString(userId), UUID.fromString(centerId), page, count, sortBy, keyword, orderByDesc, type), HttpStatus.OK);
+        return new ResponseEntity<>(this.ticketService.getTicketList(UUID.fromString(userId), UUID.fromString(centerId), page, count, sortBy, keyword, orderByDesc, type, status), HttpStatus.OK);
     }
     @PutMapping("/modify/{gymTicketId}")
     @Operation(description = "헬스장 이용권 수정")

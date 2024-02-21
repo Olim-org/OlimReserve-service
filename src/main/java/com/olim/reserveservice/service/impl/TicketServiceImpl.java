@@ -92,7 +92,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public TicketGetListResonse getTicketList(UUID userId, UUID centerId, int page, int count, String sortBy, String keyword, Boolean orderByDesc, String type) {
+    public TicketGetListResonse getTicketList(UUID userId, UUID centerId, int page, int count, String sortBy, String keyword, Boolean orderByDesc, String type, String status) {
         CenterFeignResponse centerFeignResponse = customerClient.getCenterInfo(userId.toString(), centerId.toString());
         if (centerFeignResponse == null) {
             throw new DataNotFoundException("해당 센터를 찾을 수 없습니다.");
@@ -106,7 +106,12 @@ public class TicketServiceImpl implements TicketService {
         Sort sort = (orderByDesc) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
 
         Pageable pageable = PageRequest.of(page, count, sort);
-
+        if (!status.equals("")) {
+            Page<Ticket> tickets = ticketRepository.findAllByCenterIdAndTypeAndStatusAndTitleContaining(centerId, TicketType.valueOf(type), TicketStatus.valueOf(status), keyword, pageable);
+            TicketGetListResonse ticketGetListResonse = TicketGetListResonse
+                    .makeDto(tickets);
+            return ticketGetListResonse;
+        }
         Page<Ticket> tickets = ticketRepository.findAllByCenterIdAndTypeAndStatusIsNotAndTitleContaining(centerId, TicketType.valueOf(type), TicketStatus.DELETE, keyword, pageable);
         TicketGetListResonse ticketGetListResonse = TicketGetListResonse
                 .makeDto(tickets);
@@ -117,6 +122,9 @@ public class TicketServiceImpl implements TicketService {
     public String updateTicket(UUID userId, UUID ticketId, TicketModifyRequest ticketModifyRequest) {
         if (ticketModifyRequest.ticketStatus().getKey().equals("DELETE")) {
             throw new CustomException("삭제는 수정에서 진행할 수 없습니다.");
+        }
+        if (ticketModifyRequest.ticketStatus().getKey().equals("WAIT")) {
+            throw new CustomException("판매 대기는 수정에서 진행할 수 없습니다.");
         }
         Optional<Ticket> gymTicket = ticketRepository.findById(ticketId);
         if (!gymTicket.isPresent()) {
@@ -129,8 +137,10 @@ public class TicketServiceImpl implements TicketService {
         if (!centerFeignResponse.owner().equals(userId)) {
             throw new PermissionFailException("이용권을 수정할 권한이 없습니다.");
         }
-
         Ticket gotTicket = gymTicket.get();
+        if (gotTicket.getStatus().equals(TicketStatus.DELETE)) {
+            throw new CustomException("삭제된 이용권은 수정할 수 없습니다.");
+        }
         switch (gotTicket.getType()) {
             case GYM -> {
                 gotTicket.updateTicket(
@@ -184,6 +194,9 @@ public class TicketServiceImpl implements TicketService {
             throw new PermissionFailException("이용권을 삭제할 권한이 없습니다.");
         }
         Ticket gotTicket = gymTicket.get();
+        if (gotTicket.getStatus().equals(TicketStatus.DELETE)) {
+            throw new CustomException("삭제된 이용권은 삭제할 수 없습니다.");
+        }
         gotTicket.updateStatus(TicketStatus.DELETE);
         this.ticketRepository.save(gotTicket);
         return "성공적으로 이용권이 삭제 되었습니다.";
