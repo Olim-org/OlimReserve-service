@@ -180,6 +180,9 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
         if (ticketCustomerPutRequest.type().getKey().equals("DELETE")) {
             throw new CustomException("이용권을 삭제할 수 없습니다. 삭제는 삭제 API를 이용해주세요.");
         }
+        if (gotTicketCustomer.getType().getKey().equals("DELETED")) {
+            throw new CustomException("이미 삭제된 고객 이용권입니다.");
+        }
         switch (ticketCustomer.get().getTicketType()) {
             case GYM -> {
                 gotTicketCustomer.updateTicketCustomer(
@@ -239,6 +242,9 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
             throw new PermissionFailException("해당 이용권을 삭제할 권한이 없습니다.");
         }
         TicketCustomer gotTicketCustomer = ticketCustomer.get();
+        if (gotTicketCustomer.getType().getKey().equals("DELETED")) {
+            throw new CustomException("이미 삭제된 고객 이용권입니다.");
+        }
         Optional<Ticket> ticket = this.ticketRepository.findById(gotTicketCustomer.getTicket().getId());
         if (!ticket.get().getCenterId().equals(gotTicketCustomer.getCenterId())) {
             throw new PermissionFailException("해당 이용권은 해당 센터의 이용권이 아닙니다.");
