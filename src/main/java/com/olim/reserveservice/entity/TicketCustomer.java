@@ -96,8 +96,6 @@ public class TicketCustomer extends BaseEntity{
             String customerName,
             LocalDate startDate,
             LocalDate endDate,
-            LocalTime startTime,
-            LocalTime endTime,
             Integer validCounts,
             PaymentMethod paymentMethod,
             String price,
@@ -113,8 +111,6 @@ public class TicketCustomer extends BaseEntity{
         this.customerName = customerName;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
         this.validCounts = validCounts;
         this.paymentMethod = paymentMethod;
         this.price = price;

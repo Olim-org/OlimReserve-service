@@ -29,14 +29,6 @@ public record TicketCustomerPutRequest(
         @NotBlank
         @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "날짜 형식이 올바르지 않습니다.")
         String endDate,
-        @Schema(description = "티켓 시작 시간", example = "09:00")
-        @NotBlank
-        @Pattern(regexp = "^\\d{2}:\\d{2}$", message = "시간 형식이 올바르지 않습니다.")
-        String startTime,
-        @Schema(description = "티켓 종료 시간", example = "18:00")
-        @NotBlank
-        @Pattern(regexp = "^\\d{2}:\\d{2}$", message = "시간 형식이 올바르지 않습니다.")
-        String endTime,
         @Schema(description = "티켓 유효 횟수", example = "10")
         Integer validCounts,
         @Schema(description = "결제 방식", example = "CASH")

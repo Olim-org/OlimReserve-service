@@ -77,8 +77,8 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
                         .paidPrice(ticketCustomerGiveRequest.paidPrice())
                         .description(ticketCustomerGiveRequest.description())
                         .customJson(ticketCustomerGiveRequest.customJson())
-                        .startTime(LocalTime.parse(ticketCustomerGiveRequest.startTime(), timeFormatter))
-                        .endTime(LocalTime.parse(ticketCustomerGiveRequest.endTime(), timeFormatter))
+                        .startTime(gotTicket.getStartTime())
+                        .endTime(gotTicket.getEndTime())
                         .validCounts(-10)
                         .build();
                 this.ticketCustomerRepository.save(ticketCustomer);
@@ -100,8 +100,8 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
                         .paidPrice(ticketCustomerGiveRequest.paidPrice())
                         .description(ticketCustomerGiveRequest.description())
                         .customJson(ticketCustomerGiveRequest.customJson())
-                        .startTime(LocalTime.parse(ticketCustomerGiveRequest.startTime(), timeFormatter))
-                        .endTime(LocalTime.parse(ticketCustomerGiveRequest.endTime(), timeFormatter))
+                        .startTime(gotTicket.getStartTime())
+                        .endTime(gotTicket.getEndTime())
                         .validCounts(ticketCustomerGiveRequest.validCounts())
                         .build();
                 this.ticketCustomerRepository.save(ticketCustomer);
@@ -190,8 +190,6 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
                         gotTicketCustomer.getCustomerName(),
                         LocalDate.parse(ticketCustomerPutRequest.startDate(), DateTimeFormatter.ISO_DATE),
                         LocalDate.parse(ticketCustomerPutRequest.endDate(), DateTimeFormatter.ISO_DATE),
-                        LocalTime.parse(ticketCustomerPutRequest.startTime(), DateTimeFormatter.ISO_TIME),
-                        LocalTime.parse(ticketCustomerPutRequest.endTime(), DateTimeFormatter.ISO_TIME),
                         ticketCustomerPutRequest.validCounts(),
                         ticketCustomerPutRequest.paymentMethod(),
                         ticketCustomerPutRequest.price(),
@@ -211,8 +209,6 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
                         gotTicketCustomer.getCustomerName(),
                         LocalDate.parse(ticketCustomerPutRequest.startDate(), DateTimeFormatter.ISO_DATE),
                         LocalDate.parse(ticketCustomerPutRequest.endDate(), DateTimeFormatter.ISO_DATE),
-                        LocalTime.parse(ticketCustomerPutRequest.startTime(), DateTimeFormatter.ISO_TIME),
-                        LocalTime.parse(ticketCustomerPutRequest.endTime(), DateTimeFormatter.ISO_TIME),
                         ticketCustomerPutRequest.validCounts(),
                         ticketCustomerPutRequest.paymentMethod(),
                         ticketCustomerPutRequest.price(),
