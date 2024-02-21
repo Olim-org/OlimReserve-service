@@ -5,9 +5,7 @@ import com.olim.reserveservice.enumeration.TicketCustomerType;
 import com.olim.reserveservice.enumeration.TicketType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 
 import java.util.UUID;
 
@@ -30,6 +28,8 @@ public record TicketCustomerPutRequest(
         @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "날짜 형식이 올바르지 않습니다.")
         String endDate,
         @Schema(description = "티켓 유효 횟수", example = "10")
+        @DecimalMin(value = "1", message = "1 이상의 숫자를 입력해주세요.")
+        @DecimalMax(value = "1000", message = "1000 이하의 숫자를 입력해주세요.")
         Integer validCounts,
         @Schema(description = "결제 방식", example = "CASH")
         @NotNull

@@ -3,9 +3,7 @@ package com.olim.reserveservice.dto.request;
 import com.olim.reserveservice.enumeration.TicketType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 
 import java.util.Map;
 import java.util.UUID;
@@ -32,8 +30,12 @@ public record TicketCreateRequest(
         @NotNull
         TicketType type,
         @Schema(description = "티켓 적용 일수", example = "30")
+        @DecimalMin(value = "1", message = "1 이상의 숫자를 입력해주세요.")
+        @DecimalMax(value = "1000", message = "1000 이하의 숫자를 입력해주세요.")
         Integer applyDays,
         @Schema(description = "티켓 유효 횟수", example = "10")
+        @DecimalMin(value = "1", message = "1 이상의 숫자를 입력해주세요.")
+        @DecimalMax(value = "1000", message = "1000 이하의 숫자를 입력해주세요.")
         Integer validCount,
         @Schema(description = "티켓 시작 시간", example = "09:00")
         @Pattern(regexp = "^\\d{2}:\\d{2}$", message = "시간 형식이 올바르지 않습니다.")
