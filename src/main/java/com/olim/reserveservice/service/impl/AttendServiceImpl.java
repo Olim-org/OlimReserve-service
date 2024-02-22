@@ -333,7 +333,7 @@ public class AttendServiceImpl implements AttendService {
                     LocalDateTime.of(LocalDate.parse(startDate), LocalTime.MIN),
                     LocalDateTime.of(LocalDate.parse(endDate), LocalTime.MAX),
                     LocalTime.of(i, 0),
-                    LocalTime.of(i+1, 0)
+                    LocalTime.of(i, 59)
             );
             AttendTimeResponse attendTimeResponse = AttendTimeResponse.makeDto(startTime, count);
             attendTimeResponses.add(attendTimeResponse);
