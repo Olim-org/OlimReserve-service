@@ -149,7 +149,7 @@ public class TicketServiceImpl implements TicketService {
                         ticketModifyRequest.price(),
                         ticketModifyRequest.sale(),
                         ticketModifyRequest.applyDays(),
-                        null,
+                        -10,
                         LocalTime.parse(ticketModifyRequest.startTime(), DateTimeFormatter.ISO_TIME),
                         LocalTime.parse(ticketModifyRequest.endTime(), DateTimeFormatter.ISO_TIME),
                         ticketModifyRequest.hexColor(),
