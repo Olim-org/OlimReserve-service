@@ -71,7 +71,6 @@ public class Ticket extends BaseEntity {
         this.price = price;
         this.sale = sale;
         this.type = type;
-        this.status = TicketStatus.WAIT;
         this.applyDays = applyDays;
         this.validCounts = validCounts;
         this.startTime = startTime;
