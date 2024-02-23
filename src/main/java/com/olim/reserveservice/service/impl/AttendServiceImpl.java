@@ -249,8 +249,14 @@ public class AttendServiceImpl implements AttendService {
         if (!centerFeignResponse.owner().equals(userId)) {
             throw new PermissionFailException("출석체크를 조회할 권한이 없습니다.");
         }
+        if (startDate.equals("")){
+            startDate = "2000-01-01";
+            endDate = LocalDate.now().toString();
+        } else if (endDate.equals("")) {
+            endDate = LocalDate.now().toString();
+        }
         if (startDate.equals("") && endDate.equals("")) {
-            startDate = LocalDate.now().toString();
+            startDate = "2000-01-01";
             endDate = LocalDate.now().toString();
         }
         Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
