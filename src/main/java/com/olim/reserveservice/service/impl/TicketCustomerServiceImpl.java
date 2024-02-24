@@ -3,13 +3,11 @@ package com.olim.reserveservice.service.impl;
 import com.olim.reserveservice.client.CustomerClient;
 import com.olim.reserveservice.dto.request.TicketCustomerGiveRequest;
 import com.olim.reserveservice.dto.request.TicketCustomerPutRequest;
-import com.olim.reserveservice.dto.response.CenterFeignResponse;
-import com.olim.reserveservice.dto.response.CustomerFeignResponse;
-import com.olim.reserveservice.dto.response.TicketCustomerGetListResponse;
-import com.olim.reserveservice.dto.response.TicketCustomerGetResponse;
+import com.olim.reserveservice.dto.response.*;
 import com.olim.reserveservice.entity.Ticket;
 import com.olim.reserveservice.entity.TicketCustomer;
 import com.olim.reserveservice.enumeration.TicketCustomerType;
+import com.olim.reserveservice.enumeration.TicketStatus;
 import com.olim.reserveservice.enumeration.TicketType;
 import com.olim.reserveservice.exception.customexception.CustomException;
 import com.olim.reserveservice.exception.customexception.DataNotFoundException;
@@ -27,11 +25,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -252,5 +250,68 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
         gotTicketCustomer.deleteTicketCustomer();
         this.ticketCustomerRepository.save(gotTicketCustomer);
         return "성공적으로 " + customerFeignResponse.name() +  " 고객으로부터 이용권이 제거 되었습니다.";
+    }
+    @Override
+    public CenterNewCustomerResponse getTicketCustomersIsValid(UUID userId, UUID centerId, List<Long> customerIds) {
+        CenterFeignResponse centerFeignResponse = customerClient.getCenterInfo(userId.toString(), centerId.toString());
+        if (centerFeignResponse == null) {
+            throw new DataNotFoundException("해당 센터를 찾을 수 없습니다.");
+        }
+        if (!centerFeignResponse.owner().equals(userId)) {
+            throw new PermissionFailException("이용권을 조회할 권한이 없습니다.");
+        }
+        List<TicketCustomer> validTicketCustomers = this.ticketCustomerRepository.findAllByCenterIdAndCustomerIdInAndType(centerId, customerIds, TicketCustomerType.VALID);
+        Long validCounts = validTicketCustomers.stream().map(TicketCustomer::getCustomerId).distinct().count();
+        List<TicketCustomer> invalidTicketCustomers = this.ticketCustomerRepository.findAllByCenterIdAndCustomerIdInAndType(centerId, customerIds, TicketCustomerType.INVALID);
+        Long invalidCounts = invalidTicketCustomers.stream().map(TicketCustomer::getCustomerId).distinct().count();
+        CenterNewCustomerResponse centerNewCustomerResponse = CenterNewCustomerResponse.makeDto(validCounts, invalidCounts);
+        return centerNewCustomerResponse;
+    }
+    @Override
+    public List<TicketSalesResponse> getTicketSales(UUID userId, UUID centerId, String startDate, String endDate) {
+        CenterFeignResponse centerFeignResponse = customerClient.getCenterInfo(userId.toString(), centerId.toString());
+        if (centerFeignResponse == null) {
+            throw new DataNotFoundException("해당 센터를 찾을 수 없습니다.");
+        }
+        if (!centerFeignResponse.owner().equals(userId)) {
+            throw new PermissionFailException("이용권을 조회할 권한이 없습니다.");
+        }
+        List<Ticket> tickets = ticketRepository.findAllByCenterIdAndStatusNotIn(centerId, List.of(TicketStatus.DELETE));
+        List<TicketCustomer> ticketCustomers = this.ticketCustomerRepository.findAllByCenterIdAndTicketInAndCreatedAtAfterAndCreatedAtBeforeAndTypeNotIn(centerId, tickets, LocalDateTime.of(LocalDate.parse(startDate, DateTimeFormatter.ISO_DATE), LocalTime.MIN), LocalDateTime.of(LocalDate.parse(endDate, DateTimeFormatter.ISO_DATE), LocalTime.MAX), List.of(TicketCustomerType.REFUND));
+        Map<Ticket, String> totalSales = ticketCustomers.stream().collect(
+                Collectors.groupingBy(
+                        TicketCustomer::getTicket,
+                        Collectors.mapping(TicketCustomer::getPaidPrice, Collectors.reducing("0", (a, b) -> String.valueOf(Integer.parseInt(a) + Integer.parseInt(b))))
+                )
+        );
+
+        List<TicketSalesResponse> ticketSalesResponse = TicketSalesResponse.makeDto(totalSales);
+        return ticketSalesResponse;
+    }
+
+    @Override
+    public List<RouteSalseResponse> getRouteTicketSales(UUID userId, UUID centerId, Map<String, List<Long>> routeAndId) {
+        CenterFeignResponse centerFeignResponse = customerClient.getCenterInfo(userId.toString(), centerId.toString());
+        if (centerFeignResponse == null) {
+            throw new DataNotFoundException("해당 센터를 찾을 수 없습니다.");
+        }
+        if (!centerFeignResponse.owner().equals(userId)) {
+            throw new PermissionFailException("이용권을 조회할 권한이 없습니다.");
+        }
+        List<Ticket> tickets = ticketRepository.findAllByCenterIdAndStatusNotIn(centerId, List.of(TicketStatus.DELETE));
+        List<RouteSalseResponse> routeSalseResponses = new ArrayList<>();
+        for (String route : routeAndId.keySet()) {
+            List<TicketCustomer> ticketCustomers = this.ticketCustomerRepository.findAllByCenterIdAndCustomerIdInAndTicketInAndTypeNotIn(centerId, routeAndId.get(route), tickets, List.of(TicketCustomerType.REFUND));
+            Map<Ticket, String> routeSales = ticketCustomers.stream().collect(
+                    Collectors.groupingBy(
+                            TicketCustomer::getTicket,
+                            Collectors.mapping(TicketCustomer::getPaidPrice, Collectors.reducing("0", (a, b) -> String.valueOf(Integer.parseInt(a) + Integer.parseInt(b)))
+                    )
+            ));
+            RouteSalseResponse routeSalseResponse = new RouteSalseResponse(route, RouteTicketSalesResponse.makeDto(routeSales));
+            routeSalseResponses.add(routeSalseResponse);
+        }
+
+        return routeSalseResponses;
     }
 }

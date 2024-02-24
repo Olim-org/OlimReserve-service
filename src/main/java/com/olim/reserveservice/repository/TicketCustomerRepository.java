@@ -1,5 +1,6 @@
 package com.olim.reserveservice.repository;
 
+import com.olim.reserveservice.entity.Ticket;
 import com.olim.reserveservice.entity.TicketCustomer;
 import com.olim.reserveservice.enumeration.TicketCustomerType;
 import com.olim.reserveservice.enumeration.TicketType;
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -53,4 +55,7 @@ public interface TicketCustomerRepository extends JpaRepository<TicketCustomer, 
             LocalTime startTime,
             LocalTime endTime,
             Integer validCounts);
+    List<TicketCustomer> findAllByCenterIdAndCustomerIdInAndType(UUID centerId, List<Long> customerId, TicketCustomerType type);
+    List<TicketCustomer> findAllByCenterIdAndTicketInAndCreatedAtAfterAndCreatedAtBeforeAndTypeNotIn(UUID centerId, List<Ticket> tickets, LocalDateTime startDate, LocalDateTime endDate, List<TicketCustomerType> type);
+    List<TicketCustomer> findAllByCenterIdAndCustomerIdInAndTicketInAndTypeNotIn(UUID centerId, List<Long> customerId, List<Ticket> tickets, List<TicketCustomerType> type);
 }

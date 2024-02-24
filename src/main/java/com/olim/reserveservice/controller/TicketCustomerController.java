@@ -2,8 +2,7 @@ package com.olim.reserveservice.controller;
 
 import com.olim.reserveservice.dto.request.TicketCustomerGiveRequest;
 import com.olim.reserveservice.dto.request.TicketCustomerPutRequest;
-import com.olim.reserveservice.dto.response.TicketCustomerGetListResponse;
-import com.olim.reserveservice.dto.response.TicketCustomerGetResponse;
+import com.olim.reserveservice.dto.response.*;
 import com.olim.reserveservice.service.TicketCustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -97,5 +98,36 @@ public class TicketCustomerController {
             @PathVariable(value = "ticketCustomerId") String ticketCustomerId
     ) {
         return ResponseEntity.ok(this.ticketCustomerService.deleteTicketCustomer(UUID.fromString(userId), UUID.fromString(ticketCustomerId)));
+    }
+    @GetMapping("/isValid")
+    @Operation(description = "센터 내 티켓 유효자 조회")
+    @Parameters({
+            @Parameter(name = "userId", description = "액세스 토큰 아이디", in = ParameterIn.HEADER),
+            @Parameter(name = "centerId", description = "센터 UUID", in = ParameterIn.QUERY, required = true),
+            @Parameter(name = "customerIds", description = "고객 ID 리스트", in = ParameterIn.QUERY, required = true)
+    })
+    public ResponseEntity<CenterNewCustomerResponse> getTicketIsValid(
+            @RequestHeader("id") String userId,
+            @RequestParam(value = "centerId") String centerId,
+            @RequestParam(value = "customerIds") List<Long> customerIds
+    ) {
+        return ResponseEntity.ok(this.ticketCustomerService.getTicketCustomersIsValid(UUID.fromString(userId), UUID.fromString(centerId), customerIds));
+    }
+    @GetMapping("/sales")
+    public ResponseEntity<List<TicketSalesResponse>> getTicketSales(
+            @RequestHeader("id") String userId,
+            @RequestParam(value = "centerId") String centerId,
+            @RequestParam(value = "startDate") String startDate,
+            @RequestParam(value = "endDate") String endDate
+    ) {
+        return ResponseEntity.ok(this.ticketCustomerService.getTicketSales(UUID.fromString(userId), UUID.fromString(centerId), startDate, endDate));
+    }
+    @GetMapping("/routeSales")
+    public ResponseEntity<List<RouteSalseResponse>> getRouteTicketSales(
+            @RequestHeader("id") String userId,
+            @RequestParam(value = "centerId") String centerId,
+            @RequestParam(value = "routeAndId") Map<String, List<Long>> routeAndId
+    ) {
+        return ResponseEntity.ok(this.ticketCustomerService.getRouteTicketSales(UUID.fromString(userId), UUID.fromString(centerId), routeAndId));
     }
 }

@@ -2,10 +2,11 @@ package com.olim.reserveservice.service;
 
 import com.olim.reserveservice.dto.request.TicketCustomerGiveRequest;
 import com.olim.reserveservice.dto.request.TicketCustomerPutRequest;
-import com.olim.reserveservice.dto.response.TicketCustomerGetListResponse;
-import com.olim.reserveservice.dto.response.TicketCustomerGetResponse;
+import com.olim.reserveservice.dto.response.*;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 public interface TicketCustomerService {
     @Transactional
@@ -18,4 +19,7 @@ public interface TicketCustomerService {
     String modifyTicketCustomer(UUID userId, UUID ticketCustomerId, TicketCustomerPutRequest ticketCustomerPutRequest);
     @Transactional
     String deleteTicketCustomer(UUID userId, UUID ticketCustomerId);
+    CenterNewCustomerResponse getTicketCustomersIsValid(UUID userId, UUID centerId, List<Long> customerIds);
+    List<TicketSalesResponse> getTicketSales(UUID userId, UUID centerId, String startDate, String endDate);
+    List<RouteSalseResponse> getRouteTicketSales(UUID userId, UUID centerId, Map<String, List<Long>> routeAndId);
 }

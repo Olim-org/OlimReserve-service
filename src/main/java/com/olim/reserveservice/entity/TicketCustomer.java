@@ -48,7 +48,7 @@ public class TicketCustomer extends BaseEntity{
     private String description;
     @Column(columnDefinition = "longtext")
     private String customJson;
-
+    private LocalDateTime createdAt;
     @Builder
     public TicketCustomer(
             Ticket ticket,
@@ -84,6 +84,7 @@ public class TicketCustomer extends BaseEntity{
         this.type = type;
         this.description = description;
         this.customJson = customJson;
+        this.createdAt = LocalDateTime.now();
     }
     public void updateValidCounts(Integer validCounts) {
         this.validCounts = validCounts;
