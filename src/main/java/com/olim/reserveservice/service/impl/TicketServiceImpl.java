@@ -60,7 +60,7 @@ public class TicketServiceImpl implements TicketService {
                         .validCounts(null)
                         .startTime(LocalTime.parse(ticketCreateRequest.startTime(), DateTimeFormatter.ISO_TIME))
                         .endTime(LocalTime.parse(ticketCreateRequest.endTime(), DateTimeFormatter.ISO_TIME))
-                        .status(TicketStatus.WAIT)
+                        .status(TicketStatus.SELL)
                         .hexColor(ticketCreateRequest.hexColor())
                         .customJson(ticketCreateRequest.customJson())
                         .build();
@@ -79,7 +79,7 @@ public class TicketServiceImpl implements TicketService {
                         .validCounts(ticketCreateRequest.validCount())
                         .startTime(LocalTime.parse(ticketCreateRequest.startTime(), DateTimeFormatter.ISO_TIME))
                         .endTime(LocalTime.parse(ticketCreateRequest.endTime(), DateTimeFormatter.ISO_TIME))
-                        .status(TicketStatus.WAIT)
+                        .status(TicketStatus.SELL)
                         .hexColor(ticketCreateRequest.hexColor())
                         .customJson(ticketCreateRequest.customJson())
                         .build();
