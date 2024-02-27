@@ -7,10 +7,9 @@ import java.util.Map;
 
 public record RouteSalseResponse(
         String routeName,
-        List<RouteTicketSalesResponse> value
+        String value
 ) {
-    public static RouteSalseResponse makeDto(String routeName, Map<Ticket, String> totalSales) {
-        List<RouteTicketSalesResponse> routeTicketSalesResponses = RouteTicketSalesResponse.makeDto(totalSales);
-        return new RouteSalseResponse(routeName, routeTicketSalesResponses);
+    public static RouteSalseResponse makeDto(String routeName, String value) {
+        return new RouteSalseResponse(routeName, value);
     }
 }

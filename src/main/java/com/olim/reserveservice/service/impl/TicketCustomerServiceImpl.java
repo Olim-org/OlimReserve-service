@@ -1,6 +1,9 @@
 package com.olim.reserveservice.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.olim.reserveservice.client.CustomerClient;
+import com.olim.reserveservice.dto.request.RouteAndIdRequest;
 import com.olim.reserveservice.dto.request.TicketCustomerGiveRequest;
 import com.olim.reserveservice.dto.request.TicketCustomerPutRequest;
 import com.olim.reserveservice.dto.response.*;
@@ -38,6 +41,7 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
     private final TicketCustomerRepository ticketCustomerRepository;
     private final TicketRepository ticketRepository;
     private final CustomerClient customerClient;
+    private final ObjectMapper objectMapper;
     @Transactional
     @Override
     public String giveTicket(TicketCustomerGiveRequest ticketCustomerGiveRequest, UUID userId, String token) {
@@ -264,7 +268,7 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
         Long validCounts = validTicketCustomers.stream().map(TicketCustomer::getCustomerId).distinct().count();
         List<TicketCustomer> invalidTicketCustomers = this.ticketCustomerRepository.findAllByCenterIdAndCustomerIdInAndType(centerId, customerIds, TicketCustomerType.INVALID);
         Long invalidCounts = invalidTicketCustomers.stream().map(TicketCustomer::getCustomerId).distinct().count();
-        CenterNewCustomerResponse centerNewCustomerResponse = CenterNewCustomerResponse.makeDto(validCounts, invalidCounts);
+        CenterNewCustomerResponse centerNewCustomerResponse = CenterNewCustomerResponse.makeDto(Long.valueOf(customerIds.size()), validCounts, invalidCounts);
         return centerNewCustomerResponse;
     }
     @Override
@@ -290,7 +294,7 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
     }
 
     @Override
-    public List<RouteSalseResponse> getRouteTicketSales(UUID userId, UUID centerId, Map<String, List<Long>> routeAndId) {
+    public List<RouteSalseResponse> getRouteTicketSales(UUID userId, UUID centerId, String routeAndId) throws JsonProcessingException {
         CenterFeignResponse centerFeignResponse = customerClient.getCenterInfo(userId.toString(), centerId.toString());
         if (centerFeignResponse == null) {
             throw new DataNotFoundException("해당 센터를 찾을 수 없습니다.");
@@ -298,17 +302,21 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
         if (!centerFeignResponse.owner().equals(userId)) {
             throw new PermissionFailException("이용권을 조회할 권한이 없습니다.");
         }
+        Map<String, List<Long>> responseMap = objectMapper.readValue(routeAndId, Map.class);
+
         List<Ticket> tickets = ticketRepository.findAllByCenterIdAndStatusNotIn(centerId, List.of(TicketStatus.DELETE));
         List<RouteSalseResponse> routeSalseResponses = new ArrayList<>();
-        for (String route : routeAndId.keySet()) {
-            List<TicketCustomer> ticketCustomers = this.ticketCustomerRepository.findAllByCenterIdAndCustomerIdInAndTicketInAndTypeNotIn(centerId, routeAndId.get(route), tickets, List.of(TicketCustomerType.REFUND));
+        for (String route : responseMap.keySet()) {
+            List<TicketCustomer> ticketCustomers = this.ticketCustomerRepository.findAllByCenterIdAndCustomerIdInAndTicketInAndTypeNotIn(centerId, responseMap.get(route), tickets, List.of(TicketCustomerType.REFUND));
             Map<Ticket, String> routeSales = ticketCustomers.stream().collect(
                     Collectors.groupingBy(
                             TicketCustomer::getTicket,
                             Collectors.mapping(TicketCustomer::getPaidPrice, Collectors.reducing("0", (a, b) -> String.valueOf(Integer.parseInt(a) + Integer.parseInt(b)))
                     )
             ));
-            RouteSalseResponse routeSalseResponse = new RouteSalseResponse(route, RouteTicketSalesResponse.makeDto(routeSales));
+            String routePaid = ticketCustomers.stream().map(TicketCustomer::getPaidPrice).reduce("0", (a, b) -> String.valueOf(Integer.parseInt(a) + Integer.parseInt(b)));
+//            List<RouteTicketSalesResponse> routeTicketSalesResponse = RouteTicketSalesResponse.makeDto(routePaid);
+            RouteSalseResponse routeSalseResponse = new RouteSalseResponse(route, routePaid);
             routeSalseResponses.add(routeSalseResponse);
         }
 
