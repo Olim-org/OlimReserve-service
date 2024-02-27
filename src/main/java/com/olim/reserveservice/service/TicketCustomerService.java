@@ -1,5 +1,7 @@
 package com.olim.reserveservice.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.olim.reserveservice.dto.request.RouteAndIdRequest;
 import com.olim.reserveservice.dto.request.TicketCustomerGiveRequest;
 import com.olim.reserveservice.dto.request.TicketCustomerPutRequest;
 import com.olim.reserveservice.dto.response.*;
@@ -21,5 +23,5 @@ public interface TicketCustomerService {
     String deleteTicketCustomer(UUID userId, UUID ticketCustomerId);
     CenterNewCustomerResponse getTicketCustomersIsValid(UUID userId, UUID centerId, List<Long> customerIds);
     List<TicketSalesResponse> getTicketSales(UUID userId, UUID centerId, String startDate, String endDate);
-    List<RouteSalseResponse> getRouteTicketSales(UUID userId, UUID centerId, Map<String, List<Long>> routeAndId);
+    List<RouteSalseResponse> getRouteTicketSales(UUID userId, UUID centerId, String routeAndId) throws JsonProcessingException;
 }

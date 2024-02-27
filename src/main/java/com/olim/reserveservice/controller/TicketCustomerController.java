@@ -1,5 +1,7 @@
 package com.olim.reserveservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.olim.reserveservice.dto.request.RouteAndIdRequest;
 import com.olim.reserveservice.dto.request.TicketCustomerGiveRequest;
 import com.olim.reserveservice.dto.request.TicketCustomerPutRequest;
 import com.olim.reserveservice.dto.response.*;
@@ -126,8 +128,8 @@ public class TicketCustomerController {
     public ResponseEntity<List<RouteSalseResponse>> getRouteTicketSales(
             @RequestHeader("id") String userId,
             @RequestParam(value = "centerId") String centerId,
-            @RequestParam(value = "routeAndId") Map<String, List<Long>> routeAndId
-    ) {
+            @RequestParam(value = "routeAndId") String routeAndId
+    ) throws JsonProcessingException {
         return ResponseEntity.ok(this.ticketCustomerService.getRouteTicketSales(UUID.fromString(userId), UUID.fromString(centerId), routeAndId));
     }
 }
