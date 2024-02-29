@@ -109,6 +109,28 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
                 this.ticketCustomerRepository.save(ticketCustomer);
                 break;
             }
+            case GYM_SUIT -> {
+                TicketCustomer ticketCustomer = TicketCustomer.builder()
+                        .customerId(ticketCustomerGiveRequest.customerId())
+                        .centerId(centerFeignResponse.centerId())
+                        .customerName(customerFeignResponse.name())
+                        .ticketType(TicketType.GYM_SUIT)
+                        .ticket(gotTicket)
+                        .startDate(LocalDate.parse(ticketCustomerGiveRequest.startDate(), formatter))
+                        .endDate(LocalDate.parse(ticketCustomerGiveRequest.endDate(), formatter))
+                        .type(TicketCustomerType.VALID)
+                        .paymentMethod(ticketCustomerGiveRequest.paymentMethod())
+                        .price(ticketCustomerGiveRequest.price())
+                        .paidPrice(ticketCustomerGiveRequest.paidPrice())
+                        .description(ticketCustomerGiveRequest.description())
+                        .customJson(ticketCustomerGiveRequest.customJson())
+                        .startTime(gotTicket.getStartTime())
+                        .endTime(gotTicket.getEndTime())
+                        .validCounts(gotTicket.getValidCounts())
+                        .build();
+                this.ticketCustomerRepository.save(ticketCustomer);
+                break;
+            }
         }
         return "성공적으로 이용권이 지급 되었습니다.";
     }
@@ -209,6 +231,25 @@ public class TicketCustomerServiceImpl implements TicketCustomerService {
                 gotTicketCustomer.updateTicketCustomer(
                         ticket.get(),
                         TicketType.PT,
+                        gotTicketCustomer.getCenterId(),
+                        gotTicketCustomer.getCustomerId(),
+                        gotTicketCustomer.getCustomerName(),
+                        LocalDate.parse(ticketCustomerPutRequest.startDate(), DateTimeFormatter.ISO_DATE),
+                        LocalDate.parse(ticketCustomerPutRequest.endDate(), DateTimeFormatter.ISO_DATE),
+                        ticketCustomerPutRequest.validCounts(),
+                        ticketCustomerPutRequest.paymentMethod(),
+                        ticketCustomerPutRequest.price(),
+                        ticketCustomerPutRequest.paidPrice(),
+                        ticketCustomerPutRequest.type(),
+                        ticketCustomerPutRequest.description(),
+                        ticketCustomerPutRequest.customJson()
+                );
+                break;
+            }
+            case GYM_SUIT -> {
+                gotTicketCustomer.updateTicketCustomer(
+                        ticket.get(),
+                        TicketType.GYM_SUIT,
                         gotTicketCustomer.getCenterId(),
                         gotTicketCustomer.getCustomerId(),
                         gotTicketCustomer.getCustomerName(),

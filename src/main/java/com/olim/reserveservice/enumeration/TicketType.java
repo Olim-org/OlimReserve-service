@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum TicketType {
     GYM("GYM"),
-    PT("PT");
+    PT("PT"),
+    GYM_SUIT("GYM_SUIT");
     private final String key;
 }

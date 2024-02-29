@@ -86,6 +86,24 @@ public class TicketServiceImpl implements TicketService {
                 this.ticketRepository.save(ticket);
                 break;
             }
+            case GYM_SUIT -> {
+                Ticket ticket = Ticket.builder()
+                        .centerId(centerFeignResponse.centerId())
+                        .title(ticketCreateRequest.title())
+                        .description(ticketCreateRequest.description())
+                        .price(ticketCreateRequest.price())
+                        .sale(ticketCreateRequest.sale())
+                        .type(TicketType.GYM_SUIT)
+                        .applyDays(ticketCreateRequest.applyDays())
+                        .validCounts(ticketCreateRequest.validCount())
+                        .startTime(LocalTime.parse(ticketCreateRequest.startTime(), DateTimeFormatter.ISO_TIME))
+                        .endTime(LocalTime.parse(ticketCreateRequest.endTime(), DateTimeFormatter.ISO_TIME))
+                        .status(TicketStatus.SELL)
+                        .hexColor(ticketCreateRequest.hexColor())
+                        .customJson(ticketCreateRequest.customJson())
+                        .build();
+                this.ticketRepository.save(ticket);
+            }
         }
 
         return "성공적으로 이용권이 등록 되었습니다.";
@@ -160,6 +178,23 @@ public class TicketServiceImpl implements TicketService {
                 break;
             }
             case PT -> {
+                gotTicket.updateTicket(
+                        ticketModifyRequest.title(),
+                        ticketModifyRequest.description(),
+                        ticketModifyRequest.price(),
+                        ticketModifyRequest.sale(),
+                        ticketModifyRequest.applyDays(),
+                        ticketModifyRequest.validCount(),
+                        LocalTime.parse(ticketModifyRequest.startTime(), DateTimeFormatter.ISO_TIME),
+                        LocalTime.parse(ticketModifyRequest.endTime(), DateTimeFormatter.ISO_TIME),
+                        ticketModifyRequest.hexColor(),
+                        ticketModifyRequest.customJson(),
+                        ticketModifyRequest.ticketStatus()
+                );
+                ticketRepository.save(gotTicket);
+                break;
+            }
+            case GYM_SUIT -> {
                 gotTicket.updateTicket(
                         ticketModifyRequest.title(),
                         ticketModifyRequest.description(),
