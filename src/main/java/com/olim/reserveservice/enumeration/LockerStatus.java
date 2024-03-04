@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum LockerCustomerStatus {
-    VALID("VALID"),
-    INVALID("INVALID");
+public enum LockerStatus {
+    EMPTY("EMPTY"),
+    RESERVED("RESERVED"),
+    USED("USED"),
+    BROKEN("BROKEN");
     private final String key;
 }

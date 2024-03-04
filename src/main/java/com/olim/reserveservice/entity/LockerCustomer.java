@@ -3,10 +3,7 @@ package com.olim.reserveservice.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.olim.reserveservice.enumeration.LockerCustomerStatus;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
@@ -36,4 +33,26 @@ public class LockerCustomer {
     private String hexColor;
     @Column(columnDefinition = "longtext")
     private String customJson;
+    @Builder
+    public LockerCustomer(
+            UUID centerId,
+            Locker locker,
+            Long customerId,
+            String customerName,
+            LockerCustomerStatus status,
+            LocalDate startDate,
+            LocalDate endDate,
+            String hexColor,
+            String customJson
+    ) {
+        this.centerId = centerId;
+        this.locker = locker;
+        this.customerId = customerId;
+        this.customerName = customerName;
+        this.status = status;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.hexColor = hexColor;
+        this.customJson = customJson;
+    }
 }
