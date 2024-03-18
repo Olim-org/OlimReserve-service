@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 @Repository
 public interface LockerRepository extends JpaRepository<Locker, UUID> {
-    Page<Locker> findAllByCenterIdAndSectionAndNameContainingAndStatus(
-            UUID centerId, String section, String keyword, LockerStatus status, Pageable pageable);
+    Page<Locker> findAllByCenterIdAndSectionAndNameContaining(
+            UUID centerId, String section, String keyword, Pageable pageable);
 }

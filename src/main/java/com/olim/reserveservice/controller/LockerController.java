@@ -42,7 +42,6 @@ public class LockerController {
             @Parameter(name = "centerId", description = "센터 UUID", required = true, in = ParameterIn.QUERY, example = "asdf-qr-xcv-daf"),
             @Parameter(name = "section", description = "섹션", required = false, in = ParameterIn.QUERY, example = "A"),
             @Parameter(name = "keyword", description = "검색어", required = false, in = ParameterIn.QUERY, example = "김"),
-            @Parameter(name = "status", description = "상태", required = false, in = ParameterIn.QUERY, example = "ALL"),
             @Parameter(name = "page", description = "페이지", required = false, in = ParameterIn.QUERY, example = "0"),
             @Parameter(name = "count", description = "페이지 내 아이템 수", required = false, in = ParameterIn.QUERY, example = "20")
     })
@@ -51,10 +50,17 @@ public class LockerController {
             @RequestParam(value = "centerId") String centerId,
             @RequestParam(value = "section", defaultValue = "") String section,
             @RequestParam(value = "keyword", defaultValue = "") String keyword,
-            @RequestParam(value = "status", defaultValue = "ALL") String status,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "count", defaultValue = "30") int count
     ) {
-        return new ResponseEntity<>(lockerService.getLockerList(userId, centerId, section, keyword, status, page, count), HttpStatus.OK);
+        return new ResponseEntity<>(lockerService.getLockerList(userId, centerId, section, keyword, page, count), HttpStatus.OK);
     }
+//    @GetMapping("/{centerId}/sections")
+//    @Operation(summary = "센터 섹션 목록 조회", description = "센터의 섹션 목록을 조회합니다.")
+//    @Parameters({
+//            @Parameter(name = "id", description = "액세스 토큰 아이디", required = true, in = ParameterIn.HEADER),
+//            @Parameter(name = "centerId", description = "센터 UUID", required = true, in = ParameterIn.QUERY, example = "asdf-qr-xcv-daf")
+//    })
+
+
 }

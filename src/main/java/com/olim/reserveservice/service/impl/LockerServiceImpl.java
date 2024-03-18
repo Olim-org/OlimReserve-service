@@ -46,7 +46,7 @@ public class LockerServiceImpl implements LockerService {
                 .name(lockerCreateRequest.name())
                 .section(lockerCreateRequest.section())
                 .description(lockerCreateRequest.description())
-                .status(LockerStatus.EMPTY)
+                .status(LockerStatus.AVAILABLE)
                 .hexColor(lockerCreateRequest.hexColor())
                 .customJson(lockerCreateRequest.customJson())
                 .build();
@@ -54,7 +54,7 @@ public class LockerServiceImpl implements LockerService {
         return "락커가 생성되었습니다.";
     }
     @Override
-    public LockerGetListResponse getLockerList(String userId, String centerId, String section, String keyword, String status, int page, int count) {
+    public LockerGetListResponse getLockerList(String userId, String centerId, String section, String keyword, int page, int count) {
         CenterFeignResponse centerFeignResponse = customerClient.getCenterInfo(userId.toString(), centerId);
         if (centerFeignResponse == null) {
             throw new DataNotFoundException("해당 센터를 찾을 수 없습니다.");
@@ -66,8 +66,8 @@ public class LockerServiceImpl implements LockerService {
         Sort sort = Sort.by(Sort.Direction.DESC, "name");
 
         Pageable pageable = PageRequest.of(page, count, sort);
-        Page<Locker> lockerPage = lockerRepository.findAllByCenterIdAndSectionAndNameContainingAndStatus(
-                UUID.fromString(centerId), section, keyword, LockerStatus.valueOf(status), pageable);
+        Page<Locker> lockerPage = lockerRepository.findAllByCenterIdAndSectionAndNameContaining(
+                UUID.fromString(centerId), section, keyword, pageable);
         LockerGetListResponse lockerGetListResponse = LockerGetListResponse.makeDto(lockerPage);
         return lockerGetListResponse;
     }

@@ -6,9 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum LockerStatus {
-    EMPTY("EMPTY"),
-    RESERVED("RESERVED"),
-    USED("USED"),
+    AVAILABLE("AVAILABLE"),
     BROKEN("BROKEN");
     private final String key;
 }
